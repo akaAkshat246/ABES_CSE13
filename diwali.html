@@ -1,0 +1,199 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Diwali • Bhai Dooj • Govardhan Pooja — Festival Project</title>
+  <style>
+    
+    @import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Roboto&display=swap');
+
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      
+      background: linear-gradient(135deg, #2e0000, #92b121, #9c9ee0);
+      color: #222;
+      line-height: 1.6;
+    }
+
+
+    @keyframes glow {
+      0%, 100% { text-shadow: 0 0 4px #ffd700, 0 0 10px #ffec8b; }
+      50% { text-shadow: 0 0 10px #ffcc33, 0 0 20px #ffd700; }
+    }
+
+    @keyframes flame {
+      0% { transform: scaleY(1); opacity:1;}
+      50% { transform: scaleY(1.2); opacity:.8;}
+      100% { transform: scaleY(1); opacity:1;}
+    }
+
+    
+    header {
+      text-align: center;
+      padding: 2rem 1rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-bottom: 4px solid #ffd700;
+    }
+
+    header h1 {
+      font-family: 'Cinzel Decorative', cursive;
+      font-size: 3rem;
+      color: #ffd700;
+      animation: glow 2s infinite;
+      margin: 0;
+    }
+
+    header p {
+      font-size: 1.2rem;
+      color: #fff3cc;
+      margin-top: .3rem;
+      font-style: italic;
+    }
+
+    main {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    section, article, aside, footer {
+      background: rgba(255, 255, 255, 0.85);
+      border-radius: 15px;
+      padding: 1.2rem;
+      box-shadow: 0 6px 12px rgba(0,0,0,0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    section:hover, article:hover, aside:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+    }
+
+    h2 {
+      color: #b8860b;
+      border-bottom: 2px solid #ffd700;
+      padding-bottom: .25rem;
+      font-family: 'Cinzel Decorative', cursive;
+    }
+
+    ul, ol { padding-left: 1.2rem; margin: .5rem 0; }
+    li { margin-bottom: .5rem; }
+
+    figure { margin: 0; text-align: center; }
+    img { width: 100%; max-width: 450px; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.2); }
+    figcaption { font-style: italic; color: #444; margin-top: .5rem; }
+
+    a.button {
+      display: inline-block;
+      margin-top: .5rem;
+      padding: .6rem 1rem;
+      background: #ffcc33;
+      color: #2e0000;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      box-shadow: 0 0 6px #ffd700;
+      transition: all 0.3s ease;
+    }
+
+    a.button:hover { box-shadow: 0 0 15px #ffd700, 0 0 20px #ffec8b; transform: scale(1.05); }
+
+    
+    .diya {
+      width: 20px; height: 30px;
+      background: linear-gradient(to top, #ff00aa, #ffcc00);
+      border-radius: 50% 50% 50% 50%;
+      position: relative;
+      margin: 0 auto 1rem;
+    }
+
+    .diya::before {
+      content: '';
+      position: absolute;
+      top: -15px; left: 50%;
+      transform: translateX(-50%);
+      width: 6px; height: 15px;
+      background: radial-gradient(circle, #bba62d, #ff6600);
+      border-radius: 50%;
+      animation: flame 1s infinite;
+    }
+
+    
+    footer { text-align: center; padding: 1rem; background: #20599b; color: #ffd700; font-weight: 500; margin-top: 1rem; border-top: 4px solid #ffd700; }
+
+    @media print { body { background: white; color: black; } section, article, aside, footer { box-shadow: none; border: 1px solid #ddd; } }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>✨ Happy Diwali ✨</h1>
+  <p>Celebrate light, love, and blessings with family and friends!</p>
+</header>
+
+<main>
+  <section>
+    <h2>Diwali — Festival of Lights</h2>
+    <p>Diwali celebrates the triumph of light over darkness. Decorate your home with diyas and rangolis, and enjoy sweets with loved ones.</p>
+    <div class="diya"></div>
+    <ul>
+      <li>Decorate your home with rangoli and lamps.</li>
+      <li>Perform Lakshmi Pooja in the evening.</li>
+      <li>Distribute sweets and celebrate together.</li>
+    </ul>
+    <figure>
+      <img src="https://tse4.mm.bing.net/th/id/OIP.JSA31WA1KEWFNurU6aQ06AHaHa?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Diwali diyas" />
+      <figcaption>Glowing diyas illuminating homes on Diwali night.</figcaption>
+    </figure>
+  </section>
+
+  <article>
+    <h2>Govardhan Pooja Blessings 🕉️🐄⛰️</h2>
+    <p>Celebrate Lord Krishna lifting the Govardhan Hill and protect your home with devotion and offerings.</p>
+    <div class="diya"></div>
+    <ol>
+      <li>Create a symbolic Govardhan hill with clay or cow dung.</li>
+      <li>Offer flowers, sweets, and fruits to the hill.</li>
+      <li>Perform parikrama around the hill with prayers.</li>
+    </ol>
+    <figure>
+      <img src="https://tse1.mm.bing.net/th/id/OIP.El8lxsEizO6-o8idA0RfyQHaEu?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Govardhan Hill" />
+      <figcaption>Govardhan Hill — symbol of faith and protection.</figcaption>
+    </figure>
+  </article>
+
+  <article>
+    <h2>Bhai Dooj — Bond of Siblings</h2>
+    <p>Sisters bless their brothers with tika and prayers, strengthening sibling bonds with love and gifts.</p>
+    <div class="diya"></div>
+    <ul>
+      <li>Perform tika ceremony with aarti and sweets.</li>
+      <li>Exchange gifts and spend quality time together.</li>
+    </ul>
+    <figure>
+      <img src="https://tse3.mm.bing.net/th/id/OIF.MaJ7pv3syOQtF2sriicH5w?cb=12ucfimg=1&rs=1&pid=ImgDetMain&o=7&rm=3" alt="Bhai Dooj celebration" />
+      <figcaption>Sister applying tika on her brother during Bhai Dooj.</figcaption>
+    </figure>
+  </article>
+
+  <aside>
+    <h2>Tips for a Safe & Eco-Friendly Celebration</h2>
+    <ul>
+      <li>Use eco-friendly diyas and decorations.</li>
+      <li>Avoid noisy firecrackers to reduce pollution.</li>
+      <li>Share sweets made with natural ingredients.</li>
+      <li>Donate to those in need.</li>
+    </ul>
+    <a class="button" href="https://www.financialexpress.com/life/lifestyle-130-best-diwali-2025-wishes-professional-personal-amp-bollywood-style-messages-with-quotes-and-images-4015599/">Download Printable Greeting</a>
+  </aside>
+</main>
+
+<footer>
+  <p>Created by AKA Akshat ✨</p>
+</footer>
+
+</body>
+</html>

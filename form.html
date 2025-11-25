@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        form {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            margin: auto;
+        }
+        fieldset {
+            border: 2px solid #11bddb;
+            border-radius: 8px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        legend {
+            padding: 0 10px;
+            font-weight: bold;
+            color: #11bddb;
+        }
+        input[type="text"],
+        input[type="number"],
+        input[type="email"],
+        input[type="tel"],
+        input[type="password"],
+        input[type="file"],
+        input[type="date"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+            background-color: #11bddb;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        input[type="submit"]:hover,
+        input[type="reset"]:hover,
+        input[type="button"]:hover {
+            background-color: #097e6a;
+        }   
+        </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+   <form>
+    <fieldset>
+        <legend>Personal Information</legend>
+        Name: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="text" placeholder="Enter your name"><br>
+        Age: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="number" placeholder="Enter your age"><br>
+        Email: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="email" placeholder="Enter your email"><br>
+        Phone: &nbsp;&nbsp;&nbsp;&nbsp; <input type="tel" placeholder="Enter your phone number"><br>
+   
+
+ <br><br><br>
+   <input type = text placeholder="Enter your name" required>
+    <br><br>
+   <br>
+   <input type = password placeholder="Enter your password" maxlength="4" required>
+     <br><br>
+         <input type ="checkbox" required> I agree to the terms and conditions
+
+    <input type ="button" value="AKA Akshat"><br>
+    <input type="submit">
+    <input type ="reset">
+    <input type="radio" name="gender"  value="male"> Male
+     <input type="radio" name="gender"  value="female"> Female
+     <input type="file">
+     <input type="date">
+     <input type="password" placeholder="Enter your password">
+     <input type="email" placeholder="Enter your email">
+    <br>
+   </form>
+</body>
+</html>

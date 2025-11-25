@@ -1,0 +1,25 @@
+h1{
+    color: red;
+    font-size: 36px;
+    text-align: center;
+    font-family: Arial, Helvetica, sans-serif;
+    font-weight: bold;
+    border: 20px;
+    border-style: groove;
+    margin: 10px;
+    padding-top: 20px;
+
+}
+p{
+    color: blue;
+    font-size: 24px;
+    text-align: justify;
+    font-family: 'Times New Roman', Times, serif;
+    font-weight: bolder;
+    padding: 20px;
+}
+body{
+    background-color: lightgrey;
+    margin: 0;
+    padding: 0;
+}
