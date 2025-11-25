@@ -1,0 +1,30 @@
+body{
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 40px;
+    border: 50x dashed chocolate
+}
+.Meow
+{
+    text-align: center;
+  
+    background-color: lightblue;
+    margin: 20px;
+    border: 3px solid blue;
+    border-color: rgb(110, 110, 15);
+    border: radius 10px;
+    padding: 15px;
+    
+}
+#CSE
+{
+    align-items: center;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    text-decoration: underline;
+    color: #333333;
+    font-size: 16px;
+    margin: 20px;
+    text-align:center;
+    text-decoration: dashed underline;
+}

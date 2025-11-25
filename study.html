@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Study Material Partner - JEE & NEET</title>
+  <style>
+    * {margin:0;padding:0;box-sizing:border-box;font-family:"Segoe UI",sans-serif;}
+    body {
+      background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+      color: white;
+      overflow-x: hidden;
+    }
+    header {
+      background: rgba(0,0,0,0.6);
+      padding: 30px;
+      text-align: center;
+      animation: fadeIn 2s ease-in-out;
+    }
+    header h1 {
+      font-size: 2.8rem;
+      color: #ffd700;
+      text-shadow: 0 0 20px rgba(255,215,0,0.8);
+      letter-spacing: 2px;
+    }
+    header p {
+      font-size: 1.2rem;
+      margin-top: 10px;
+      opacity: 0.8;
+    }
+
+    /* Search Bar */
+    .search-bar {
+      text-align: center;
+      padding: 20px;
+      background: rgba(255,255,255,0.05);
+      backdrop-filter: blur(5px);
+    }
+    .search-bar input {
+      width: 50%;
+      padding: 12px 15px;
+      border-radius: 20px;
+      border: none;
+      font-size: 1rem;
+      outline: none;
+      transition: 0.3s;
+    }
+    .search-bar input:focus {
+      box-shadow: 0 0 15px #ffd700;
+    }
+
+    /* Folder/Accordion Style */
+    .folder {
+      margin: 25px auto;
+      width: 85%;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      animation: slideUp 1.2s ease;
+    }
+    .folder-header {
+      padding: 20px;
+      cursor: pointer;
+      font-size: 1.6rem;
+      font-weight: bold;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: 0.3s;
+    }
+    .folder-header span {
+      font-size: 1.4rem;
+      transition: transform 0.3s;
+    }
+    .folder-header:hover {
+      filter: brightness(1.2);
+      transform: scale(1.02);
+    }
+
+    /* Subject Specific Colors */
+    .physics {background: linear-gradient(90deg,#0f0c29,#302b63,#24243e);}
+    .chemistry {background: linear-gradient(90deg,#0f2027,#2c5364,#203a43);}
+    .maths {background: linear-gradient(90deg,#42275a,#734b6d);}
+    
+    /* Folder Content */
+    .folder-content {
+      max-height: 0;
+      overflow: hidden;
+      background: rgba(255,255,255,0.07);
+      transition: max-height 0.6s ease-in-out, padding 0.6s ease-in-out;
+      padding: 0 20px;
+    }
+    .folder-content.open {
+      max-height: 1000px;
+      padding: 20px;
+    }
+
+    /* Material Cards */
+    .content-box {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+      margin-top: 20px;
+    }
+    .card {
+      background: rgba(255, 255, 255, 0.1);
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s;
+    }
+    .card:hover {
+      transform: translateY(-10px) scale(1.03);
+      background: rgba(255,255,255,0.2);
+      box-shadow: 0 0 25px rgba(255,215,0,0.4);
+    }
+    .card img {
+      max-width: 100%;
+      border-radius: 10px;
+      margin-bottom: 10px;
+    }
+    .card a {
+      display: inline-block;
+      margin: 10px 5px;
+      padding: 10px 15px;
+      background: #ffd700;
+      color: #111;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: 0.3s;
+    }
+    .card a:hover {
+      background: white;
+      color: #000;
+      box-shadow: 0 0 12px #ffd700;
+    }
+
+    footer {
+      text-align: center;
+      padding: 25px;
+      background: rgba(0,0,0,0.8);
+      margin-top: 40px;
+      font-size: 0.9rem;
+      letter-spacing: 1px;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {from{opacity:0;}to{opacity:1;}}
+    @keyframes slideUp {from{transform:translateY(40px);opacity:0;}to{transform:translateY(0);opacity:1;}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>📘 Study Material Partner</h1>
+    <p>Physics | Chemistry | Maths | JEE | NEET</p>
+  </header>
+
+  <!-- Search Bar -->
+  <div class="search-bar">
+    <input type="text" id="searchInput" placeholder="🔍 Search Notes, PDFs, or Videos...">
+  </div>
+
+  <!-- Physics Folder -->
+  <div class="folder">
+    <div class="folder-header physics">⚡ Physics <span>➕</span></div>
+    <div class="folder-content">
+      <div class="content-box">
+        <div class="card" data-title="Physics Notes PDF">
+          <img src="physics_image.jpg" alt="Physics Notes">
+          <h3>Notes & PDFs</h3>
+          <a href="physics_notes.pdf" target="_blank">📄 Download PDF</a>
+        </div>
+        <div class="card" data-title="Physics Video Lecture">
+          <h3>Video Lecture</h3>
+          <video width="100%" controls>
+            <source src="physics_video.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Chemistry Folder -->
+  <div class="folder">
+    <div class="folder-header chemistry">🧪 Chemistry <span>➕</span></div>
+    <div class="folder-content">
+      <div class="content-box">
+        <div class="card" data-title="Chemistry Notes PDF">
+          
+          <img src="chemistry_image.jpg" alt="Chemistry Notes">
+          <h3>Notes & PDFs</h3>
+          <a href="chemistry_notes.pdf" target="_blank">📄 Download PDF</a>
+        </div>
+        <div class="card" data-title="Chemistry Video Lecture">
+          <h3>Video Lecture</h3>
+          <video width="100%" controls>
+            <source src="chemistry_video.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Maths Folder -->
+  <div class="folder">
+    <div class="folder-header maths">📐 Maths <span>➕</span></div>
+    <div class="folder-content">
+      <div class="content-box">
+        <div class="card" data-title="Maths Notes PDF">
+          <img src="maths_image.jpg" alt="Maths Notes">
+          <h3>Notes & PDFs</h3>
+          <a href="maths_notes.pdf" target="_blank">📄 Download PDF</a>
+        </div>
+        <div class="card" data-title="Maths Video Lecture">
+          <h3>Video Lecture</h3>
+          <video width="100%" controls>
+            <source src="maths_video.mp4" type="video/mp4">
+          </video>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>© 2025 Study Partner | Designed for Class 11th & 12th Students</p>
+  </footer>
+
+  <!-- JS for Folder + Search -->
+  <script>
+    // Folder Toggle (Accordion)
+    const headers = document.querySelectorAll(".folder-header");
+    headers.forEach(header => {
+      header.addEventListener("click", () => {
+        const content = header.nextElementSibling;
+        const icon = header.querySelector("span");
+
+        // Close other folders
+        document.querySelectorAll(".folder-content").forEach(c => {
+          if (c !== content) c.classList.remove("open");
+        });
+        document.querySelectorAll(".folder-header span").forEach(s => {
+          if (s !== icon) s.textContent = "➕";
+        });
+
+        // Toggle current
+        content.classList.toggle("open");
+        icon.textContent = content.classList.contains("open") ? "➖" : "➕";
+      });
+    });
+
+    // Search Filter
+    const searchInput = document.getElementById("searchInput");
+    const cards = document.querySelectorAll(".card");
+    searchInput.addEventListener("keyup", function () {
+      const query = searchInput.value.toLowerCase();
+      cards.forEach(card => {
+        const title = card.getAttribute("data-title").toLowerCase();
+        if (title.includes(query)) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        form {
+            background: #d60f5b;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(48, 4, 4, 0.753);
+            max-width: 400px;
+            margin: auto;
+        }
+        fieldset {
+            border: 2px solid #5bdb11;
+            border-radius: 10px;
+            padding: 10px;
+            margin-bottom: 15px;
+        }
+        legend {
+            padding: 0 10px;
+            font-weight: bold;
+            color: #11db5f;
+        }
+        input[type="text"],
+        input[type="password"] {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #662d2d;
+            border-radius: 4px;
+        }
+        input[type="submit"],
+        input[type="reset"],
+        input[type="button"] {
+            background-color: #11bddb;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-right: 10px;
+        }
+        input[type="submit"]:hover,
+        input[type="reset"]:hover,
+        input[type="button"]:hover {
+            background-color: #45097e;
+        }   
+        </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <form action="#" method="post">
+         
+        <fieldset>
+        <legend>Login</legend>
+        UserName:<input type="text" id="name" placeholder="Username" required><br><br>
+        UserName:<input type="text" id="name" disabled placeholder="Username" required><br><br>
+        Password:&nbsp;&nbsp;<input type="password" maxlength="4" placeholder="password" required><br>
+        <br><input type="Submit" >
+        <input type="Reset">
+        <input type="Button" value="Login">
+        </fieldset>
+      
+    </form>
+</body>
+</html>
