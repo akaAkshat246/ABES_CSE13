@@ -8,6 +8,9 @@ h1{
     border-style: groove;
     margin: 10px;
     padding-top: 20px;
+    padding-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
 
 }
 p{
