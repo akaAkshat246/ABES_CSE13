@@ -34,7 +34,7 @@
 
 <button onclick="showPopup()">Open Popup</button>
 
-<!-- Popup HTML -->
+
 <div id="popup" class="popup">
   <div class="popup-box">
     <p>Enter your name:</p>
@@ -43,25 +43,6 @@
     <button onclick="submitName()">Submit</button>
   </div>
 </div>
-
-<script>
-
-console.log("Hello, World!");
-alert("Welcome to the HTML document!");
-confirm("Do you like this simple HTML page?");
-
-// show popup function
-function showPopup() {
-    document.getElementById("popup").style.display = "flex";
-}
-
-// submit function
-function submitName() {
-    let name = document.getElementById("nameInput").value;
-    alert("Hello " + name);
-}
-
-</script>
 
 </body>
 </html>
