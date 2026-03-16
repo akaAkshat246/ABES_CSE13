@@ -7,10 +7,13 @@
 </head>
 <body>
    <input type="text" id="Name" placeholder="Enter your text">
-      <button onclick="CSE()">Click Me</button>
+      <button onclick="CSE()" id="btn">Click Me</button>
         <script>
             function CSE() {
-            document.getElementById("Name").value;    
+            var x=document.getElementById("btn");
+            x.value="hello" 
+            console.log(x.value); 
+            document.write(x.value);  
             }
 CSE();
         </script>   
