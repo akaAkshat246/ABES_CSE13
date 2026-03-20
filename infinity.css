@@ -1,0 +1,83 @@
+/* Body Background */
+body {
+  background-image: url('https://w0.peakpx.com/wallpaper/918/254/HD-wallpaper-cats-rain-cat-window-animal-water-drop.jpg');
+  background-size: cover;
+  background-attachment: fixed;
+  color: white;
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+/* Heading */
+h1 {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Image Styling */
+.image-gallery img {
+  width: 300px;
+  height: 300px;
+  border-radius: 20px;
+  margin: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.image-gallery img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Button */
+button {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 700;
+  color: black;
+  background-color: rgb(221, 74, 98);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  display: block;
+  margin: 20px auto;
+  padding: 10px 20px;
+  transition: background-color 0.3s;
+}
+
+button:hover {
+  background-color: rgb(200, 50, 80);
+}
+
+/* Subtitle */
+h4 {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  margin-top: 20px;
+}
+
+/* Paragraph */
+p {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 500;
+  margin: 0 20px 30px;
+}
+
+/* Link */
+a {
+  text-decoration: none;
+  color: black;
+}
+
+/* Footer */
+footer {
+  text-align: center;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-weight: 600;
+  margin-top: 20px;
+  background-color: black;
+  color: white;
+  padding: 10px 0;
+}

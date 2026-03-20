@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Royal Spice Restaurant</title>
+<style>
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+background-color: #fff8f0;
+}
+header {
+background-color: #8B0000;
+color: white;
+text-align: center;
+padding: 20px; }
+nav {
+background-color: #ffcc99;
+padding: 10px;
+text-align: center;}
+nav a {
+text-decoration: none;
+margin: 15px;
+font-weight: bold;
+color: black; }
+section {
+padding: 20px;}
+ h2 {
+color: #8B0000;}
+ul {
+font-size: 18px;}
+ul ul { color: #444;}
+.food-images img {
+width: 250px;
+height: 180px;
+margin: 10px;
+border-radius: 10px;
+box-shadow: 2px 2px 10px gray;}
+form { background-color: #ffe6cc;
+padding: 20px;
+width: 50%;
+margin: auto;
+border-radius: 10px;}
+input, select {
+width: 100%;
+padding: 8px;
+margin: 8px 0;}
+button {
+background-color: #8B0000;
+color: white;
+padding: 10px;
+border: none;
+cursor: pointer;}
+button:hover {
+background-color: #cc0000;}
+footer {
+background-color: #8B0000;
+color: white;
+text-align: center;
+padding: 10px;
+margin-top: 20px;
+}</style>
+</head>
+<body>
+<header>
+<h1>Royal Spice Restaurant</h1>
+<p>Delicious Food | Fresh Ingredients | Best Taste</p>
+</header>
+<nav>
+<a href="#">Home</a>
+<a href="#">Menu</a>
+<a href="#">Reservation</a>
+<a href="#">Contact</a>
+<a href="#">Sell</a>
+</nav>
+<section>
+<h2>Our Menu</h2>
+<ul>
+<li><strong>Starters</strong>
+<ul>
+ <li>Tomato Soup - 120</li>
+ <li>Paneer Tikka - 220</li>
+ <li>Veg Spring Rolls - 180</li>
+ </ul>
+ </li>
+<li><strong>Main Course</strong>
+ <ul>
+<li>Butter Chicken - 320</li>
+<li>Shahi Paneer - 280</li>
+<li>Veg Biryani - 250</li>
+</ul>
+</li>
+<li><strong>Desserts</strong>
+<ul>
+<li>Gulab Jamun - 100</li>
+<li>Ice Cream - 90</li>
+<li>Chocolate Brownie - 150</li>
+</ul>
+</li>
+</ul>
+</section>
+<section>
+<h2>Popular Dishes</h2>
+<div class="food-images">
+<img src="https://source.unsplash.com/250x180/?biryani" alt="Biryani">
+<img src="https://source.unsplash.com/250x180/?paneer" alt="Paneer">
+<img src="https://source.unsplash.com/250x180/?pizza" alt="Pizza">
+</div>
+</section>
+<section>
+<h2>Table Reservation</h2>
+<form>
+<label>Name:</label>
+<input type="text" placeholder="ENTER YOUR NAME" required>
+<label>Email:</label>
+<input type="email" placeholder="ENTER YOUR EMAIL" required>
+<label>Date:</label>
+<input type="date" required>
+<label>Number of Guests:</label>
+<select>
+<option>1.</option>
+<option>2.</option>
+<option>3.</option>
+<option>4.</option>
+<option>5+</option>
+</select>
+<button type="submit">Book Table</button>
+ </form>
+</section>
+<footer>
+<p>Royal Spice Restaurant | All Rights Reserved</p>
+</footer>
+</body>
+</html>
