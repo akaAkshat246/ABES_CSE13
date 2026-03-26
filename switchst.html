@@ -1,36 +1,54 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Weeks_name</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Weeks_name</title>
 </head>
 <body>
-    <script>
-        var day = parseInt(prompt("Enter the day number (0-6): "));
-        switch (day) {
-            case 0:
-                document.write("Today is Sunday");
-                break;
-            case 1:
-                document.write("Today is Monday");
-                break;
-            case 2:
-                document.write("Today is Tuesday");
-                break;
-            case 3:
-                document.write("Today is Wednesday");
-                break;
-            case 4:
-                document.write("Today is Thursday");
-                break;
-            case 5:
-                document.write("Today is Friday");
-                break;
-            case 6:
-                document.write("Today is Saturday");
-                break;
-        }
-    </script>
+
+<h3>Enter day number (0-6)</h3>
+
+<input type="number" id="day">
+<button onclick="showDay()">Show Day</button>
+
+<p id="result"></p>
+
+<script>
+function showDay(){
+
+    var day = parseInt(document.getElementById("day").value);
+    var result;
+
+    switch(day){
+        case 0:
+            result = "Today is Sunday";
+            break;
+        case 1:
+            result = "Today is Monday";
+            break;
+        case 2:
+            result = "Today is Tuesday";
+            break;
+        case 3:
+            result = "Today is Wednesday";
+            break;
+        case 4:
+            result = "Today is Thursday";
+            break;
+        case 5:
+            result = "Today is Friday";
+            break;
+        case 6:
+            result = "Today is Saturday";
+            break;
+        default:
+            result = "Invalid day number";
+    }
+
+    document.getElementById("result").innerHTML = result;
+}
+</script>
+
 </body>
 </html>
