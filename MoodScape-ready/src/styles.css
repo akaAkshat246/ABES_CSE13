@@ -351,10 +351,18 @@ input {
 
 .mood-card {
   min-height: 78px;
-  color: #fff;
-  border: 1px solid rgba(255, 255, 255, 0.14);
+  color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.mood-card:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(255, 255, 255, 0.24);
+  transform: translateY(-2px);
 }
 
 .mood-card svg,
@@ -371,6 +379,9 @@ input {
 .mood-card.selected {
   color: #061016;
   background: var(--mood-accent);
+  border-color: var(--mood-accent);
+  box-shadow: 0 8px 24px color-mix(in srgb, var(--mood-accent) 35%, transparent);
+  transform: translateY(-2px) scale(1.02);
 }
 
 .page-grid {
@@ -449,9 +460,48 @@ input {
 }
 
 .sound-row button {
-  padding: 0 14px;
+  position: relative;
+  padding: 0 16px;
+  color: rgba(255, 255, 255, 0.75);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  transition: all 0.25s ease;
+  overflow: hidden;
+}
+
+.sound-row button:hover {
   color: #fff;
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.sound-row button.active {
+  color: #061016;
+  background: var(--mood-accent);
+  border-color: var(--mood-accent);
+  box-shadow: 0 0 20px color-mix(in srgb, var(--mood-accent) 58%, transparent);
+  font-weight: 750;
+}
+
+.playing-pulse {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #061016;
+  margin-left: 6px;
+  animation: pulse-wave 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse-wave {
+  0%, 100% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.4);
+    opacity: 1;
+  }
 }
 
 .task-input {
@@ -470,17 +520,78 @@ input {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   min-height: 48px;
   padding: 0 12px;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  transition: all 0.2s ease;
 }
 
-.task button {
+.task:hover {
+  background: rgba(255, 255, 255, 0.09);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.task.completed {
+  opacity: 0.5;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: transparent;
+}
+
+.task-text {
+  cursor: pointer;
+  font-size: 0.94rem;
+  transition: color 0.2s ease;
+  user-select: none;
+}
+
+.task.completed .task-text {
+  text-decoration: line-through;
+  color: rgba(255, 255, 255, 0.45);
+}
+
+.check-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.25) !important;
+  color: transparent !important;
+  background: transparent !important;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding: 0 !important;
+  flex-shrink: 0;
+}
+
+.check-btn:hover {
+  border-color: var(--mood-accent) !important;
+  color: color-mix(in srgb, var(--mood-accent) 60%, transparent) !important;
+}
+
+.check-btn.checked {
+  background: var(--mood-accent) !important;
+  border-color: var(--mood-accent) !important;
+  color: #061016 !important;
+}
+
+.delete-btn {
+  opacity: 0.4;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background: transparent !important;
+  border: 0 !important;
   color: rgba(255, 255, 255, 0.75);
-  background: transparent;
-  border: 0;
+}
+
+.delete-btn:hover {
+  opacity: 1;
+  color: #fb7185 !important;
+  transform: scale(1.1);
 }
 
 .analytics {
@@ -562,4 +673,307 @@ input {
   .mood-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
+}
+
+/* Focus Grid two-column layout */
+.focus-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 18px;
+  width: 100%;
+}
+
+.focus-sidebar {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.spotify-widget-card,
+.mindfulness-tips {
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  border-radius: 8px;
+  background: rgba(8, 13, 22, 0.72);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.26);
+  backdrop-filter: blur(18px);
+  padding: 18px;
+}
+
+.spotify-embed-container {
+  width: 100%;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #000;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.mindfulness-tips {
+  display: flex;
+  flex-direction: column;
+}
+
+.tip-text {
+  font-size: 0.94rem;
+  line-height: 1.5;
+  color: rgba(255, 255, 255, 0.82);
+  font-style: italic;
+}
+
+/* Escape Netflix/Prime button */
+.escape-btn {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 4px 14px rgba(236, 72, 153, 0.15);
+}
+
+.escape-btn:hover {
+  background: rgba(236, 72, 153, 0.16) !important;
+  border-color: #ec4899 !important;
+  box-shadow: 0 8px 24px rgba(236, 72, 153, 0.35);
+  transform: translateY(-1px);
+}
+
+.escape-btn svg {
+  animation: float-icon 2s infinite ease-in-out;
+}
+
+@keyframes float-icon {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-2px);
+  }
+}
+
+/* Cozy Cinema Escape Modal Overlay */
+.cinema-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(4, 6, 10, 0.85);
+  backdrop-filter: blur(20px);
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.cinema-modal {
+  width: min(1040px, 100%);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(13, 20, 35, 0.9) 0%, rgba(8, 12, 22, 0.95) 100%);
+  box-shadow: 0 32px 120px rgba(0, 0, 0, 0.6), 0 0 40px rgba(236, 72, 153, 0.1);
+  padding: 32px;
+  position: relative;
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.cinema-modal .modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  margin-bottom: 28px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 20px;
+}
+
+.cinema-modal h2 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  color: #fff;
+  font-weight: 900;
+  background: linear-gradient(135deg, #fff 30%, #f472b6 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-top: 4px;
+}
+
+.modal-sub {
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 1.05rem;
+  margin: 6px 0 0;
+}
+
+.cinema-modal .close-btn {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  color: #fff;
+  font-size: 28px;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  line-height: 0;
+}
+
+.cinema-modal .close-btn:hover {
+  background: #ef4444;
+  border-color: #ef4444;
+  transform: rotate(90deg);
+}
+
+/* Movie Cards Grid */
+.movies-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+}
+
+.movie-card {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.movie-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.4);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.movie-banner-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  background: #000;
+  overflow: hidden;
+}
+
+.movie-banner {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.movie-card:hover .movie-banner {
+  transform: scale(1.04);
+}
+
+.movie-platform-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 0.72rem;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  background: var(--badge-color, #e50914);
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+  letter-spacing: 0.5px;
+}
+
+.movie-info {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.movie-title-row {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 4px;
+  margin-bottom: 6px;
+}
+
+.movie-title-row h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 850;
+  color: #fff;
+  line-height: 1.35;
+}
+
+.movie-rating {
+  font-size: 0.82rem;
+  font-weight: 800;
+  color: #fbbf24;
+  white-space: nowrap;
+  background: rgba(251, 191, 36, 0.1);
+  padding: 2px 6px;
+  border-radius: 4px;
+  margin-top: 2px;
+}
+
+.movie-genre {
+  font-size: 0.7rem;
+  color: var(--mood-accent);
+  font-weight: 750;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+
+.movie-desc {
+  font-size: 0.85rem;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.72);
+  margin: 0;
+}
+
+/* Media Queries for Cinema and Focus Grid */
+@media (max-width: 1024px) {
+  .movies-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .focus-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .movies-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  
+  .cinema-modal {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 480px) {
+  .movies-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Modals Input Focus Glows */
+.search-input,
+.scan-textarea {
+  transition: all 0.25s ease-in-out;
+}
+
+.search-input:focus,
+.scan-textarea:focus {
+  border-color: var(--mood-accent) !important;
+  box-shadow: 0 0 14px color-mix(in srgb, var(--mood-accent) 28%, transparent) !important;
+  background: rgba(255, 255, 255, 0.09) !important;
+}
+
+.scan-placeholders button {
+  transition: all 0.2s ease;
+}
+
+.scan-placeholders button:hover {
+  background: rgba(45, 212, 191, 0.12) !important;
+  border-color: var(--mood-accent) !important;
+  transform: translateY(-1px);
 }
