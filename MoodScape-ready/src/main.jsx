@@ -15,9 +15,13 @@ import {
   Flame,
   Focus,
   Home as HomeIcon,
+  Hourglass,
+  Instagram,
+  Linkedin,
+  MessageCircle,
   Moon,
-  Music2,
   Plus,
+  Minus,
   RefreshCcw,
   Sparkles,
   Sun,
@@ -218,12 +222,12 @@ function MoodScene() {
   );
 }
 
-function Nav({ view, setView, onOpenScan }) {
+function Nav({ view, setView, onOpenScan, themeMode, toggleTheme }) {
   const items = [
-    ['home', HomeIcon],
-    ['dashboard', Activity],
-    ['analytics', BarChart3],
-    ['focus', Focus]
+    ['home', HomeIcon, 'Home'],
+    ['planning', Check, 'Reflective Planning'],
+    ['analytics', BarChart3, 'Analytics'],
+    ['focus', Focus, 'Focus Zone']
   ];
   return (
     <nav className="nav">
@@ -251,18 +255,31 @@ function Nav({ view, setView, onOpenScan }) {
           <Brain size={16} style={{ color: 'var(--mood-accent)' }} />
           <span>Scan Mood</span>
         </button>
-        {items.map(([id, Icon]) => (
+        {items.map(([id, Icon, label]) => (
           <button
             key={id}
             className={view === id ? 'icon-btn active' : 'icon-btn'}
             type="button"
-            title={id}
-            aria-label={id}
+            title={label}
+            aria-label={label}
             onClick={() => setView(id)}
           >
             <Icon size={18} />
           </button>
         ))}
+        <button
+          className="icon-btn theme-toggle-btn"
+          type="button"
+          onClick={toggleTheme}
+          title={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
+          aria-label="Toggle theme mode"
+          style={{
+            marginLeft: '4px',
+            border: '1px solid var(--panel-border)'
+          }}
+        >
+          {themeMode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
+        </button>
       </div>
     </nav>
   );
@@ -288,6 +305,7 @@ function MoodSelector() {
 function Hero({ setView }) {
   return (
     <section className="hero">
+      <MoodScene />
       <div className="hero-copy">
         <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="eyebrow">
           AI Powered Mood-Adaptive React Application
@@ -299,9 +317,9 @@ function Hero({ setView }) {
           A responsive emotional workspace that transforms theme, motion, assistant guidance, analytics, and focus tools around the user’s current state.
         </motion.p>
         <div className="hero-actions">
-          <button type="button" className="primary-btn" onClick={() => setView('dashboard')}>
+          <button type="button" className="primary-btn" onClick={() => setView('planning')}>
             <Zap size={18} />
-            Launch dashboard
+            Reflective planning
           </button>
           <button type="button" className="ghost-btn" onClick={() => setView('focus')}>
             <TimerReset size={18} />
@@ -309,9 +327,27 @@ function Hero({ setView }) {
           </button>
         </div>
       </div>
-      <MoodScene />
     </section>
   );
+}
+
+function TypewriterText({ text }) {
+  const [displayedText, setDisplayedText] = useState('');
+  
+  useEffect(() => {
+    let index = 0;
+    setDisplayedText('');
+    const timer = setInterval(() => {
+      setDisplayedText((prev) => prev + text.charAt(index));
+      index++;
+      if (index >= text.length) {
+        clearInterval(timer);
+      }
+    }, 15);
+    return () => clearInterval(timer);
+  }, [text]);
+  
+  return <span>{displayedText}</span>;
 }
 
 function AssistantPanel() {
@@ -323,7 +359,7 @@ function AssistantPanel() {
       </div>
       <div>
         <span className="panel-label">Assistant</span>
-        <p>{theme.assistant}</p>
+        <p><TypewriterText text={theme.assistant} /></p>
       </div>
     </motion.div>
   );
@@ -339,15 +375,185 @@ function StatCard({ label, value, icon: Icon }) {
   );
 }
 
-function Dashboard({ onOpenCinema }) {
-  const { mood, theme } = useMood();
+function HappinessSustainer() {
+  const [sleep, setSleep] = useState(true);
+  const [boundaries, setBoundaries] = useState(true);
+  const [breakTaken, setBreakTaken] = useState(true);
+  const [gratitude, setGratitude] = useState(false);
+
+  const score = (sleep ? 25 : 0) + (boundaries ? 25 : 0) + (breakTaken ? 25 : 0) + (gratitude ? 25 : 0);
+  
+  // Calculate active runway: Base 4 hours + sleep (3h) + boundaries (3h) + break (3h) + gratitude (3h) = 16h total protected waking day
+  const happyHours = 4 + (sleep ? 3 : 0) + (boundaries ? 3 : 0) + (breakTaken ? 3 : 0) + (gratitude ? 3 : 0);
+
+  return (
+    <div className="stat-card happiness-sustainer-panel" style={{ gridColumn: '1 / -1', marginTop: '18px' }}>
+      <div className="section-head" style={{ marginBottom: '16px' }}>
+        <div>
+          <span className="panel-label">Emotional Longevity Framework</span>
+          <h3>Happiness Maintenance Criteria</h3>
+          <p style={{ margin: '4px 0 0', fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+            A thorough scientific baseline evaluating your baseline habits. Toggle your day's criteria to measure your estimated emotional lifespan runway and discover how long you can sustain peak happy hours.
+          </p>
+        </div>
+      </div>
+      
+      <div className="sustainer-grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '24px', alignItems: 'flex-start' }}>
+        <div className="sustainer-toggles" style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+          <span className="panel-label" style={{ marginBottom: '4px', display: 'block' }}>Habits Checklist</span>
+          
+          <button 
+            type="button" 
+            className={`ghost-btn sustainer-toggle-btn ${sleep ? 'active' : ''}`}
+            onClick={() => setSleep(!sleep)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px', minHeight: '44px', width: '100%', borderRadius: '8px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span>💤</span>
+              <strong style={{ fontSize: '0.88rem' }}>7+ Hours Restful Sleep (+3h)</strong>
+            </div>
+            <span style={{ fontSize: '0.82rem' }}>{sleep ? 'Active ✅' : 'Inactive ❌'}</span>
+          </button>
+          
+          <button 
+            type="button" 
+            className={`ghost-btn sustainer-toggle-btn ${boundaries ? 'active' : ''}`}
+            onClick={() => setBoundaries(!boundaries)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px', minHeight: '44px', width: '100%', borderRadius: '8px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span>🛡️</span>
+              <strong style={{ fontSize: '0.88rem' }}>Clear Cognitive Boundaries (+3h)</strong>
+            </div>
+            <span style={{ fontSize: '0.82rem' }}>{boundaries ? 'Active ✅' : 'Inactive ❌'}</span>
+          </button>
+          
+          <button 
+            type="button" 
+            className={`ghost-btn sustainer-toggle-btn ${breakTaken ? 'active' : ''}`}
+            onClick={() => setBreakTaken(!breakTaken)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px', minHeight: '44px', width: '100%', borderRadius: '8px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span>☕</span>
+              <strong style={{ fontSize: '0.88rem' }}>Hourly Screen Break Taken (+3h)</strong>
+            </div>
+            <span style={{ fontSize: '0.82rem' }}>{breakTaken ? 'Active ✅' : 'Inactive ❌'}</span>
+          </button>
+          
+          <button 
+            type="button" 
+            className={`ghost-btn sustainer-toggle-btn ${gratitude ? 'active' : ''}`}
+            onClick={() => setGratitude(!gratitude)}
+            style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 16px', minHeight: '44px', width: '100%', borderRadius: '8px' }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <span>🎯</span>
+              <strong style={{ fontSize: '0.88rem' }}>Daily Gratitude Win Logged (+3h)</strong>
+            </div>
+            <span style={{ fontSize: '0.82rem' }}>{gratitude ? 'Active ✅' : 'Inactive ❌'}</span>
+          </button>
+        </div>
+        
+        <div className="sustainer-gauge-side" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
+          <span className="panel-label">Estimated Lifespan Runway</span>
+          
+          <div className="gauge-score-circle" style={{
+            width: '120px',
+            height: '120px',
+            borderRadius: '50%',
+            border: '2px dashed var(--mood-accent)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            boxShadow: '0 0 25px color-mix(in srgb, var(--mood-accent) 18%, transparent)',
+            background: 'var(--input-bg)',
+            transition: 'all 0.3s ease'
+          }}>
+            <strong style={{ fontSize: '2.2rem', color: 'var(--mood-accent)', fontWeight: '900', letterSpacing: '-0.5px' }}>{happyHours}h</strong>
+            <span style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.8px', opacity: 0.7, fontWeight: '700' }}>Happy Runway</span>
+          </div>
+          
+          <div style={{ width: '100%' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '6px' }}>
+              <span style={{ color: 'var(--text-muted)' }}>Sustainability Score</span>
+              <strong style={{ color: 'var(--mood-accent)' }}>{score}%</strong>
+            </div>
+            <div style={{ height: '8px', background: 'var(--input-bg)', borderRadius: '99px', overflow: 'hidden', border: '1px solid var(--panel-border)' }}>
+              <div style={{ width: `${score}%`, height: '100%', background: 'var(--mood-accent)', borderRadius: '99px', transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }} />
+            </div>
+            
+            <div style={{ marginTop: '12px', padding: '12px', borderRadius: '8px', background: 'var(--card-hover-bg)', border: '1px solid var(--panel-border)', textAlign: 'left' }}>
+              <p style={{ margin: 0, fontSize: '0.84rem', lineHeight: '1.4', color: 'var(--text-app)' }}>
+                {score === 100 && '🥇 Peak Emotional Resilience: You have fortified all four emotional pillars! Your neurochemistry has full reserves to sustain joy, tackle deep focus, and remain unshakeable for the entire 16-hour waking day.'}
+                {score === 75 && '🥈 Strong Emotional Buffer: Your baseline is excellent. You can sustain up to 13 hours of stability. Cultivating that last micro-habit will anchor your peace all the way to bedtime.'}
+                {score === 50 && '🥉 Moderate Waking Runway: Your emotional energy supports 10 hours of happy focus. Ensure you step away from screens and honor your personal boundaries before mental fatigue sets in.'}
+                {score === 25 && '⚠️ Deficit Alert: With only 7 hours of sustained runway, emotional fatigue is close. We highly recommend starting with restorative rest or a screen detox right away.'}
+                {score === 0 && '🚨 Depleted Runway: You are running on a 4-hour survival baseline. Rest is now a critical biological requirement. Close some tabs and do a complete reset.'}
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="sustainer-guidelines" style={{ borderTop: '1px solid var(--panel-border)', marginTop: '24px', paddingTop: '20px' }}>
+        <span className="panel-label" style={{ marginBottom: '12px', display: 'block' }}>Scientific Maintenance Guidelines — Extends Waking Happiness</span>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', gap: '16px' }}>
+          <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--input-bg)', border: '1px solid var(--panel-border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span>💤</span>
+              <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Neurological Baseline</strong>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              Sleeping 7-8 hours clears out accumulated neural waste (adenosine), balances cortisol, and resets emotional processing centers to keep you steady.
+            </p>
+          </div>
+          
+          <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--input-bg)', border: '1px solid var(--panel-border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span>🛡️</span>
+              <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Cognitive Borders</strong>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              Establishing borders blocks digital notification noise, preventing high stress spikes and safeguarding your finite reservoir of willpower and attention.
+            </p>
+          </div>
+          
+          <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--input-bg)', border: '1px solid var(--panel-border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span>☕</span>
+              <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Sensory Intermissions</strong>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              Stepping away from devices for 5 minutes every hour replenishes dopamine receptor sensitivity and activates parasympathetic nervous recovery.
+            </p>
+          </div>
+          
+          <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--input-bg)', border: '1px solid var(--panel-border)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <span>🎯</span>
+              <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Threat Reset (Gratitude)</strong>
+            </div>
+            <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
+              Consciously identifying and writing down three daily successes or wins overrides the brain's evolutionary threat bias, retraining it to register safety and comfort.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function ReflectivePlanning() {
+  const { theme } = useMood();
   return (
     <section className="page-grid">
       <div className="wide">
         <div className="section-head" style={{ marginBottom: '14px' }}>
           <div>
-            <span className="panel-label">Live environment</span>
-            <h2>{theme.activity}</h2>
+            <span className="panel-label">Reflective Planning Hub</span>
+            <h2>Tasks & Environments</h2>
           </div>
         </div>
         <div style={{ marginBottom: '18px' }}>
@@ -361,24 +567,9 @@ function Dashboard({ onOpenCinema }) {
           <StatCard label="Energy" value={`${theme.energy}%`} icon={Zap} />
           <StatCard label="Stress" value={`${theme.stress}%`} icon={Brain} />
         </div>
-        {mood && (
-          <button
-            type="button"
-            className="ghost-btn full escape-btn animate-pulse-border"
-            onClick={onOpenCinema}
-            style={{
-              border: '1px solid rgba(236, 72, 153, 0.5)',
-              background: 'rgba(236, 72, 153, 0.12)',
-              color: '#fff',
-              marginTop: '8px',
-              fontWeight: '800'
-            }}
-          >
-            <Film size={17} style={{ color: '#ec4899' }} /> Watch Movies Curated for {MOODS[mood].label} Mode
-          </button>
-        )}
       </div>
-      <FocusTools compact />
+      <TaskPlanner />
+      <HappinessSustainer />
     </section>
   );
 }
@@ -742,50 +933,421 @@ class AmbientSynthEngine {
 const synthEngine = new AmbientSynthEngine();
 
 function SpotifyWidget({ mood }) {
-  const playlists = {
-    happy: '37i9dQZF1DXcBWIGoYBM5M',
-    calm: '37i9dQZF1DX4sWSpwq3LiO',
-    focused: '37i9dQZF1DWZeKCadRdKQ',
-    stressed: '37i9dQZF1DWWQRwui0ExPn',
-    angry: '37i9dQZF1DWXRqYSzZy49K'
+  const MOOD_TRACKS = {
+    happy: [
+      { title: "Sunny Days Ahead", artist: "Golden Sunsets", duration: "3:12" },
+      { title: "Chasing Horizons", artist: "Morning Vibe", duration: "4:05" },
+      { title: "Summer Wave", artist: "The Ocean Breeze", duration: "3:34" },
+      { title: "Walking on Sunshine", artist: "Solar Light", duration: "3:58" },
+      { title: "Good Vibes Only", artist: "Positive Mindset", duration: "2:45" },
+      { title: "Golden Hour Glow", artist: "Tycho Resonance", duration: "4:22" },
+      { title: "Bright Side", artist: "Happy Folk", duration: "3:15" },
+      { title: "Morning Joy", artist: "Sunrise Acoustic", duration: "2:50" },
+      { title: "Euphoria", artist: "Summer Clouds", duration: "3:40" },
+      { title: "Daydreaming", artist: "Chillout Wave", duration: "4:08" },
+      { title: "Warm Embraces", artist: "The Gentle Breeze", duration: "3:30" },
+      { title: "Clear Blue Sky", artist: "Acoustic Dreams", duration: "3:10" },
+      { title: "Island Hop", artist: "Reggae Vibes", duration: "3:25" },
+      { title: "Vibrant Fields", artist: "Organic Pulse", duration: "3:52" },
+      { title: "Happy Trails", artist: "Wandering Minds", duration: "4:15" },
+      { title: "Serendipity", artist: "Sparkling Waters", duration: "3:05" },
+      { title: "Radiance", artist: "Solar Winds", duration: "3:48" },
+      { title: "Joyful Journey", artist: "Optimist Beat", duration: "3:36" },
+      { title: "Meadow Dance", artist: "Folk Harmony", duration: "3:02" },
+      { title: "Sunbeam", artist: "Warmth", duration: "2:58" },
+      { title: "Carefree Days", artist: "Bright Horizon", duration: "3:40" },
+      { title: "Smile Direct", artist: "Acoustic Smile", duration: "3:12" },
+      { title: "Ocean Breeze", artist: "Coastline Flow", duration: "4:02" },
+      { title: "Summer Fields", artist: "Tycho Tribute", duration: "4:30" },
+      { title: "Acoustic Sunrise", artist: "Morning Dew", duration: "3:18" },
+      { title: "Fresh Start", artist: "New Day Collective", duration: "3:05" },
+      { title: "Gladden Hearts", artist: "Cozy Folk", duration: "3:42" },
+      { title: "Shining Star", artist: "Ethereal Pop", duration: "3:50" },
+      { title: "Bouncing Beats", artist: "Upbeat Vibe", duration: "3:28" },
+      { title: "Delightful Spring", artist: "Folk Meadow", duration: "3:14" },
+      { title: "Golden Coast", artist: "Sunset Cruiser", duration: "4:05" },
+      { title: "Pleasant Valley", artist: "Nature Flute", duration: "4:12" },
+      { title: "Heartwarming", artist: "Piano Solace", duration: "3:35" },
+      { title: "Bright Horizon", artist: "Optimism", duration: "3:44" },
+      { title: "Cheer Up", artist: "Upbeat Acoustic", duration: "2:55" },
+      { title: "Lighthearted", artist: "Playful Keys", duration: "3:08" },
+      { title: "Joy Ride", artist: "Vibrant Drive", duration: "3:22" },
+      { title: "Morning Glory", artist: "Early Bird", duration: "3:02" },
+      { title: "Sparkling Eyes", artist: "Acoustic Love", duration: "3:18" },
+      { title: "Solar Spark", artist: "Synth Pop", duration: "3:40" },
+      { title: "Blissful Walk", artist: "Gentle Acoustic", duration: "3:15" },
+      { title: "Harvest Moon", artist: "Autumn Folk", duration: "4:10" }
+    ],
+    calm: [
+      { title: "Drifting Clouds", artist: "Silent Sky", duration: "4:50" },
+      { title: "Ocean Breath Ritual", artist: "Deep Resonance", duration: "5:15" },
+      { title: "Whispering Pines", artist: "Forest Solitude", duration: "3:55" },
+      { title: "Weightless Space", artist: "Marconi Union", duration: "8:00" },
+      { title: "Soft Rain Falling", artist: "Window Pane", duration: "6:22" },
+      { title: "Peaceful Slumber", artist: "Lullaby Piano", duration: "5:10" },
+      { title: "Ethereal Echoes", artist: "Ambient Horizon", duration: "4:40" },
+      { title: "Gentle Flow", artist: "River Meditations", duration: "5:30" },
+      { title: "Still Waters", artist: "Lake Solitude", duration: "6:05" },
+      { title: "Twilight Glow", artist: "Sunset Sleep", duration: "4:52" },
+      { title: "Quiet Mind", artist: "Zen Garden", duration: "5:18" },
+      { title: "Submarine Soundscapes", artist: "Deep Drift", duration: "7:12" },
+      { title: "Restful Horizon", artist: "Evening Star", duration: "5:02" },
+      { title: "Misty Mountains", artist: "Nordic Flute", duration: "4:45" },
+      { title: "Breathe In Slow", artist: "Pranayama Ambient", duration: "5:40" },
+      { title: "Cradle of Dreams", artist: "Sleep Waves", duration: "6:15" },
+      { title: "Autumn Leaves", artist: "Soft Guitar", duration: "4:12" },
+      { title: "Deep Sleep Sanctuary", artist: "Delta Waves", duration: "8:30" },
+      { title: "Pebbles on Shore", artist: "Ocean Waves", duration: "5:50" },
+      { title: "Soft Light", artist: "Cosmic Piano", duration: "4:28" },
+      { title: "Dusk Whispers", artist: "Hammock Echoes", duration: "5:05" },
+      { title: "Quiet Sanctuary", artist: "Inner Peace", duration: "6:00" },
+      { title: "Serene Valley", artist: "Acoustic Silence", duration: "4:32" },
+      { title: "Starlight Drift", artist: "Space Lullaby", duration: "5:44" },
+      { title: "Calming Storm", artist: "Warm Rain", duration: "6:18" },
+      { title: "Solitude", artist: "Lonely Piano", duration: "4:05" },
+      { title: "Dreamcatcher", artist: "Ambient Dreamer", duration: "5:12" },
+      { title: "Silent Symphony", artist: "Soft Strings", duration: "5:38" },
+      { title: "Healing Water", artist: "Stream Meditations", duration: "6:24" },
+      { title: "Velvet Nights", artist: "Smooth Ambient", duration: "4:50" },
+      { title: "Endless Horizons", artist: "Hammock Ambient", duration: "5:16" },
+      { title: "Cozy Fireside", artist: "Crackle & Piano", duration: "4:48" },
+      { title: "Warm Blanket", artist: "Lofi Calm", duration: "3:52" },
+      { title: "Floating Free", artist: "Weightless", duration: "7:02" },
+      { title: "Zen Garden", artist: "Lotus Flower", duration: "5:08" },
+      { title: "Meditation Wave", artist: "Alpha State", duration: "6:30" },
+      { title: "Soft Cloud", artist: "Feather Ambient", duration: "4:22" },
+      { title: "Evening Peace", artist: "Sunset Acoustic", duration: "4:15" },
+      { title: "Restful Sleep", artist: "Night Soundscapes", duration: "7:10" },
+      { title: "Whispering Wind", artist: "Breeze Harmony", duration: "4:55" },
+      { title: "Serenity", artist: "Peace Collective", duration: "5:20" },
+      { title: "Midnight Calm", artist: "Soft Synth Pad", duration: "5:40" }
+    ],
+    focused: [
+      { title: "Cognitive Resonance", artist: "Focus Beats", duration: "4:02" },
+      { title: "Monolithic Mindset", artist: "Ambient Flow", duration: "5:08" },
+      { title: "Synapse Synthesis", artist: "Brainwaves", duration: "3:40" },
+      { title: "Deep Work Flow", artist: "Binaural Focus", duration: "5:12" },
+      { title: "Coding Session", artist: "Lofi Programmer", duration: "3:50" },
+      { title: "Alpha Waves Focus", artist: "Cognitive Lab", duration: "6:00" },
+      { title: "Monotony", artist: "Minimalist Synth", duration: "4:32" },
+      { title: "Hyperfocus Tunnel", artist: "Cyber Ambient", duration: "5:18" },
+      { title: "Precision", artist: "Electronic Pulse", duration: "3:45" },
+      { title: "Mental Catalyst", artist: "Deep Ambient Tech", duration: "4:55" },
+      { title: "Study Companion", artist: "Lofi Library", duration: "3:10" },
+      { title: "Unbroken Attention", artist: "Industrial Drone", duration: "6:40" },
+      { title: "The Flow State", artist: "Zone Out Beats", duration: "4:15" },
+      { title: "Task Manager", artist: "Productive Pulse", duration: "3:30" },
+      { title: "Synaptic Fire", artist: "Neurological Tech", duration: "4:05" },
+      { title: "Deep Thought", artist: "Zen Tech", duration: "5:02" },
+      { title: "Logical Paths", artist: "Keyboard Clicker", duration: "3:48" },
+      { title: "Organized Mind", artist: "Structure Sound", duration: "4:20" },
+      { title: "Attention Span", artist: "Binaural Beat Lab", duration: "7:00" },
+      { title: "Focused Vision", artist: "Clarity Ambient", duration: "5:10" },
+      { title: "Creative Engine", artist: "Tycho Tribute", duration: "4:38" },
+      { title: "Subconscious Pulse", artist: "Introspection", duration: "5:05" },
+      { title: "Digital Isolation", artist: "Offline Beats", duration: "3:56" },
+      { title: "Workspace Vibe", artist: "Modern Lofi", duration: "3:22" },
+      { title: "Intellectual Drive", artist: "Piano Focus", duration: "4:12" },
+      { title: "Analytical Grid", artist: "Tech Pulse", duration: "3:40" },
+      { title: "Coding Late Night", artist: "Vapor Synth", duration: "4:28" },
+      { title: "Concentration", artist: "Mind Control", duration: "5:30" },
+      { title: "Absolute Silence", artist: "Ethereal Focus", duration: "6:08" },
+      { title: "System Reboot", artist: "IDM Ambient", duration: "4:50" },
+      { title: "Continuous Progress", artist: "Linear Drive", duration: "3:58" },
+      { title: "Gamma Focus", artist: "Cognitive Frequency", duration: "6:15" },
+      { title: "Study Guide", artist: "Soft Guitar Lofi", duration: "3:18" },
+      { title: "Clarity of Thought", artist: "Pristine Piano", duration: "4:42" },
+      { title: "Deep Dive", artist: "Sonar Soundscapes", duration: "5:20" },
+      { title: "Mental Stamina", artist: "Active Brain", duration: "4:10" },
+      { title: "Productivity Cycle", artist: "Clockwork Ambient", duration: "4:45" },
+      { title: "Focus Ritual", artist: "Incense & Beats", duration: "3:52" },
+      { title: "Synapse Activation", artist: "Nerve Impulse", duration: "3:35" },
+      { title: "Steady Focus", artist: "Horizon Pulse", duration: "5:00" },
+      { title: "Cognitive Shield", artist: "Noise Cancelling", duration: "7:30" },
+      { title: "Deep Absorption", artist: "Immersion", duration: "5:42" }
+    ],
+    stressed: [
+      { title: "Slow Down Rhythms", artist: "Healing Piano", duration: "5:30" },
+      { title: "Tension Release", artist: "Nature Whispers", duration: "4:45" },
+      { title: "Restorative Sigh", artist: "Ambient Calm", duration: "3:58" },
+      { title: "Anxiety Shield", artist: "Calming Frequencies", duration: "6:15" },
+      { title: "Decompressing", artist: "Soft Strings", duration: "5:02" },
+      { title: "Calming the Nervous System", artist: "Binaural Solace", duration: "7:20" },
+      { title: "Peace of Mind", artist: "Sanctuary Piano", duration: "4:15" },
+      { title: "Gentle Unwind", artist: "Lofi Chillout", duration: "3:30" },
+      { title: "Shedding Layers", artist: "Warm Acoustic", duration: "3:50" },
+      { title: "Safe Haven", artist: "Ethereal Echoes", duration: "4:58" },
+      { title: "Breathing Room", artist: "Spacious Pad", duration: "5:40" },
+      { title: "Serotonin Boost", artist: "Light Beats", duration: "3:22" },
+      { title: "Emotional Shelter", artist: "Hammock Softness", duration: "5:12" },
+      { title: "Quiet Storm", artist: "Rain on Window", duration: "6:05" },
+      { title: "Letting Go", artist: "Minimalist Piano", duration: "4:28" },
+      { title: "Inner Warmth", artist: "Cozy Ambient", duration: "4:40" },
+      { title: "Soft Landing", artist: "Chillwave Solace", duration: "3:45" },
+      { title: "Overcoming", artist: "Triumphant Ambient", duration: "5:10" },
+      { title: "Peaceful Harbor", artist: "Coastline Ocean", duration: "5:50" },
+      { title: "Rest & Recovery", artist: "Slow Wave", duration: "6:30" },
+      { title: "The Healing Stream", artist: "Gentle River", duration: "5:18" },
+      { title: "Anxiety Release", artist: "Solace Frequency", duration: "6:00" },
+      { title: "Gentle Hug", artist: "Lofi Lullaby", duration: "3:15" },
+      { title: "Soft Pillows", artist: "Cloud Ambient", duration: "4:02" },
+      { title: "Calm Mindset", artist: "Positivity", duration: "3:56" },
+      { title: "Unwinding Gears", artist: "Clock Calm", duration: "4:52" },
+      { title: "Quiet Corner", artist: "Nook Soundscape", duration: "4:12" },
+      { title: "Breathe Deeply", artist: "Breath Control", duration: "5:08" },
+      { title: "Tranquil Sleep", artist: "Deep Sleep Waves", duration: "7:40" },
+      { title: "Emotional Detach", artist: "Subspace Pad", duration: "6:12" },
+      { title: "Soothing Waves", artist: "Gentle Shore", duration: "5:22" },
+      { title: "Warm Hearth", artist: "Fireplace Piano", duration: "4:40" },
+      { title: "Sweet Release", artist: "Ethereal Sound", duration: "5:00" },
+      { title: "Mindfulness", artist: "Lotus Meditation", duration: "5:15" },
+      { title: "Stress Melt", artist: "Ice to Water", duration: "4:32" },
+      { title: "Tranquil Forest", artist: "Morning Forest", duration: "3:58" },
+      { title: "Shedding Stress", artist: "Piano Breathe", duration: "4:05" },
+      { title: "Patience", artist: "Slow Chords", duration: "5:24" },
+      { title: "Quiet Refuge", artist: "Safety Zone", duration: "4:48" },
+      { title: "Comforting Sounds", artist: "Warm Hug Acoustic", duration: "3:35" },
+      { title: "Safe Passage", artist: "Sunset Glow", duration: "4:50" },
+      { title: "Restful Solace", artist: "Nightfall", duration: "5:05" }
+    ],
+    angry: [
+      { title: "Cathartic Release", artist: "Electronic Pulse", duration: "3:20" },
+      { title: "Storm Control", artist: "Heavy Synth Engine", duration: "4:12" },
+      { title: "Fiery Intention", artist: "Driven Chords", duration: "3:45" },
+      { title: "Anger Management", artist: "Therapeutic Pulse", duration: "4:30" },
+      { title: "Venting Energy", artist: "Drum & Bass Focus", duration: "3:15" },
+      { title: "Tempest Calm", artist: "Ambient Industrial", duration: "5:10" },
+      { title: "Channelling Power", artist: "Epic Strings", duration: "4:02" },
+      { title: "Raw Potential", artist: "Arpeggiator Wave", duration: "3:58" },
+      { title: "Screaming Silence", artist: "Deep Drone", duration: "6:20" },
+      { title: "Volcanic Ash", artist: "Sub-Bass Meditation", duration: "5:40" },
+      { title: "The Purge", artist: "Sonic Cleansing", duration: "4:50" },
+      { title: "Fire Starter", artist: "Electronic Tension", duration: "3:28" },
+      { title: "Resolving Conflicts", artist: "Neutral Tone", duration: "4:15" },
+      { title: "Tectonic Shift", artist: "Grounding Frequencies", duration: "5:30" },
+      { title: "Fierce Focus", artist: "Driven Lofi", duration: "3:48" },
+      { title: "Outflow", artist: "Subtle Noise", duration: "4:40" },
+      { title: "Redemption", artist: "Piano & Synth", duration: "4:12" },
+      { title: "Rising Up", artist: "Anthem Wave", duration: "3:52" },
+      { title: "Iron Will", artist: "Heavy Minimalist", duration: "5:02" },
+      { title: "Breaking Chains", artist: "Uplifting Pulse", duration: "3:35" },
+      { title: "The Release Ritual", artist: "Venting Drone", duration: "6:00" },
+      { title: "Fiery Drive", artist: "Rhythm Attack", duration: "3:10" },
+      { title: "Thunder Focus", artist: "Storm Ambience", duration: "4:58" },
+      { title: "Catharsis", artist: "Synthesized Catharsis", duration: "4:05" },
+      { title: "Intense Resolution", artist: "Heavy Chords", duration: "3:42" },
+      { title: "Grounding Force", artist: "Deep Earth Sound", duration: "5:12" },
+      { title: "Turbulent Flow", artist: "Rapid Streams", duration: "4:30" },
+      { title: "Chasing Shadows", artist: "Mystic Beat", duration: "3:56" },
+      { title: "Controlled Fire", artist: "Focus Driven", duration: "4:18" },
+      { title: "Overcoming Fury", artist: "Slow Heavy Piano", duration: "5:08" },
+      { title: "Energy Outpour", artist: "Acoustic Fire", duration: "3:22" },
+      { title: "Shattered Silence", artist: "Epic Drone", duration: "6:40" },
+      { title: "Phoenix Rise", artist: "Synth Triumph", duration: "4:28" },
+      { title: "Inner Strength", artist: "Resolute Mind", duration: "4:45" },
+      { title: "Unleashed Power", artist: "Driven Strings", duration: "3:50" },
+      { title: "Calming the Fire", artist: "Water on Coals", duration: "5:15" },
+      { title: "Vented Tension", artist: "Lofi Anger Release", duration: "3:30" },
+      { title: "Tectonic Grounding", artist: "Earthquake Alpha", duration: "6:05" },
+      { title: "Shedding Anger", artist: "Soft Acoustic Calm", duration: "3:52" },
+      { title: "Symphony of Catharsis", artist: "Orchestral Reset", duration: "5:22" },
+      { title: "Unyielding Mind", artist: "Ambient Core", duration: "4:50" },
+      { title: "Peaceful Victory", artist: "Gentle Triumph", duration: "4:02" }
+    ]
   };
-  
-  const playlistId = playlists[mood] || playlists.focused;
-  
+
+  const tracks = MOOD_TRACKS[mood] || MOOD_TRACKS.focused;
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedTrack, setSelectedTrack] = useState(null);
+
+  useEffect(() => {
+    setSelectedTrack(null);
+    setIsOpen(false);
+  }, [mood]);
+
   return (
     <div className="spotify-widget-card">
-      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '12px' }}>
-        <svg viewBox="0 0 24 24" width="18" height="18" fill="#1DB954" style={{ flexShrink: 0 }}>
+      <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
+        <svg viewBox="0 0 24 24" width="24" height="24" fill="#1DB954" style={{ flexShrink: 0 }}>
           <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.076-.336.135-.668.47-.744 3.856-.88 7.15-.506 9.82 1.13.295.18.387.565.207.86zm1.224-2.72c-.226.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.075-1.185-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.666-1.112 8.232-.57 11.34 1.343.367.227.487.708.26 1.074zm.106-2.833C14.484 8.788 8.825 8.6 5.587 9.584c-.5.15-1.025-.133-1.176-.632-.15-.5.133-1.025.632-1.176 3.722-1.13 9.953-.918 13.914 1.432.45.267.6.845.333 1.295-.267.45-.845.6-1.295.333z"/>
         </svg>
         <span className="panel-label" style={{ margin: 0 }}>Spotify Recommendation</span>
       </div>
-      <div className="spotify-embed-container">
-        <iframe
-          src={`https://open.spotify.com/embed/playlist/${playlistId}?utm_source=generator&theme=0`}
-          width="100%"
-          height="152"
-          frameBorder="0"
-          allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-          loading="lazy"
-          style={{ borderRadius: '8px', border: 0 }}
-          title="Spotify Playlist Recommendation"
-        />
+
+      <div className="spotify-dropdown-wrapper">
+        <button
+          type="button"
+          onClick={() => setIsOpen(!isOpen)}
+          className="spotify-dropdown-trigger"
+        >
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
+            <span style={{ fontSize: '1rem', color: '#1DB954', flexShrink: 0 }}>🎵</span>
+            {selectedTrack ? (
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px', overflow: 'hidden' }}>
+                <span style={{ fontWeight: '700', fontSize: '0.86rem', color: 'var(--text-app)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                  {selectedTrack.title}
+                </span>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', whiteSpace: 'nowrap', textOverflow: 'ellipsis', overflow: 'hidden' }}>
+                  {selectedTrack.artist}
+                </span>
+              </div>
+            ) : (
+              <span style={{ color: 'var(--text-muted)', fontSize: '0.84rem' }}>
+                Select a track for your {mood} mindset...
+              </span>
+            )}
+          </div>
+          <span style={{
+            fontSize: '0.75rem',
+            color: 'var(--text-muted)',
+            transition: 'transform 0.2s ease',
+            transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+            marginLeft: '10px',
+            flexShrink: 0
+          }}>
+            ▼
+          </span>
+        </button>
+
+        {isOpen && (
+          <div className="spotify-dropdown-menu">
+            {tracks.map((track, idx) => (
+              <div
+                key={track.title}
+                onClick={() => {
+                  setSelectedTrack(track);
+                  setIsOpen(false);
+                }}
+                className="spotify-dropdown-item"
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden', width: '80%' }}>
+                  <span style={{ fontSize: '0.9rem', flexShrink: 0, color: selectedTrack?.title === track.title ? '#1DB954' : 'var(--text-muted)' }}>
+                    {selectedTrack?.title === track.title ? '●' : '🎵'}
+                  </span>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '1px', overflow: 'hidden', textAlign: 'left' }}>
+                    <span style={{
+                      fontSize: '0.84rem',
+                      fontWeight: selectedTrack?.title === track.title ? '700' : '600',
+                      color: selectedTrack?.title === track.title ? 'var(--mood-accent)' : 'var(--text-app)',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden'
+                    }}>
+                      {track.title}
+                    </span>
+                    <span style={{
+                      fontSize: '0.74rem',
+                      color: 'var(--text-muted)',
+                      whiteSpace: 'nowrap',
+                      textOverflow: 'ellipsis',
+                      overflow: 'hidden'
+                    }}>
+                      {track.artist}
+                    </span>
+                  </div>
+                </div>
+                <span style={{ fontSize: '0.74rem', color: 'var(--text-muted)', fontVariantNumeric: 'tabular-nums', marginLeft: '12px', flexShrink: 0 }}>
+                  {track.duration}
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 }
 
-function FocusTools({ compact = false }) {
+function HourglassTimer({ running, progress }) {
+  return (
+    <div className={running ? 'hourglass-stage running' : 'hourglass-stage'} style={{ '--timer-progress': progress }}>
+      <div className="hourglass-icon">
+        <Hourglass size={72} strokeWidth={1.4} />
+        <span className="sand sand-top" />
+        <span className="sand sand-stream" />
+        <span className="sand sand-bottom" />
+      </div>
+    </div>
+  );
+}
+
+function TaskPlanner() {
+  const [tasks, setTasks] = useState([
+    { id: '1', text: 'Review the next priority calmly', completed: false },
+    { id: '2', text: 'Choose one small action to finish today', completed: false }
+  ]);
+  const [draft, setDraft] = useState('');
+
+  const toggleTask = (id) => {
+    setTasks((items) =>
+      items.map((item) => (item.id === id ? { ...item, completed: !item.completed } : item))
+    );
+  };
+
+  const deleteTask = (id) => {
+    setTasks((items) => items.filter((item) => item.id !== id));
+  };
+
+  const addTask = () => {
+    if (!draft.trim()) return;
+    setTasks((items) => [{ id: Date.now().toString(), text: draft.trim(), completed: false }, ...items]);
+    setDraft('');
+  };
+
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter') {
+      addTask();
+    }
+  };
+
+  return (
+    <section className="planning-panel">
+      <div className="section-head">
+        <div>
+          <span className="panel-label">Reflective planning</span>
+          <h2>Tasks to do</h2>
+        </div>
+      </div>
+      <div className="task-input">
+        <input
+          value={draft}
+          onChange={(event) => setDraft(event.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="Add a task to do"
+          aria-label="Add task to reflective planning"
+        />
+        <button className="icon-btn active" type="button" aria-label="Add task" onClick={addTask}>
+          <Plus size={18} />
+        </button>
+      </div>
+      <div className="task-list">
+        {tasks.map((task) => (
+          <div className={`task ${task.completed ? 'completed' : ''}`} key={task.id}>
+            <button
+              className={`check-btn ${task.completed ? 'checked' : ''}`}
+              type="button"
+              aria-label={task.completed ? 'Mark incomplete' : 'Mark complete'}
+              onClick={() => toggleTask(task.id)}
+            >
+              <Check size={16} />
+            </button>
+            <span className="task-text" onClick={() => toggleTask(task.id)}>
+              {task.text}
+            </span>
+            <button className="delete-btn" type="button" aria-label={`Delete ${task.text}`} onClick={() => deleteTask(task.id)}>
+              <Trash2 size={15} />
+            </button>
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+function FocusTools() {
   const { mood } = useMood();
   const [seconds, setSeconds] = useState(25 * 60);
   const [running, setRunning] = useState(false);
-  const [tasks, setTasks] = useState([
-    { id: '1', text: 'Review React context flow', completed: false },
-    { id: '2', text: 'Polish analytics copy', completed: false }
-  ]);
-  const [draft, setDraft] = useState('');
-  const [activeSound, setActiveSound] = useState(null);
 
   const playCompletionBell = () => {
     try {
@@ -820,59 +1382,21 @@ function FocusTools({ compact = false }) {
   useEffect(() => {
     if (seconds === 0 && running) {
       setRunning(false);
-      synthEngine.stopAll();
-      setActiveSound(null);
       playCompletionBell();
     }
   }, [seconds, running]);
 
-  useEffect(() => {
-    return () => {
-      synthEngine.stopAll();
-    };
-  }, []);
-
-  const handleSoundToggle = (type) => {
-    const next = synthEngine.toggle(type);
-    setActiveSound(next);
-  };
-
-  const toggleTask = (id) => {
-    setTasks((items) =>
-      items.map((item) => (item.id === id ? { ...item, completed: !item.completed } : item))
-    );
-  };
-
-  const deleteTask = (id) => {
-    setTasks((items) => items.filter((item) => item.id !== id));
-  };
-
-  const addTask = () => {
-    if (!draft.trim()) return;
-    const newTask = {
-      id: Date.now().toString(),
-      text: draft.trim(),
-      completed: false
-    };
-    setTasks((items) => [newTask, ...items]);
-    setDraft('');
-  };
-
-  const handleKeyDown = (event) => {
-    if (event.key === 'Enter') {
-      addTask();
-    }
-  };
-
   const minutes = String(Math.floor(seconds / 60)).padStart(2, '0');
   const rest = String(seconds % 60).padStart(2, '0');
+  const progress = `${Math.max(0, Math.min(100, (seconds / (25 * 60)) * 100))}%`;
 
-  const mainPanel = (
-    <section className={compact ? 'focus-panel compact' : 'focus-panel'}>
+  return (
+    <div className="focus-grid">
+      <section className="focus-panel">
       <div className="section-head">
         <div>
           <span className="panel-label">Focus zone</span>
-          <h2>{minutes}:{rest}</h2>
+          <h2>Focus time</h2>
         </div>
         <div className="tool-row">
           <button className="icon-btn" type="button" title={running ? 'Pause' : 'Play'} aria-label={running ? 'Pause' : 'Play'} onClick={() => setRunning((value) => !value)}>
@@ -881,97 +1405,35 @@ function FocusTools({ compact = false }) {
           <button className="icon-btn" type="button" title="Reset timer" aria-label="Reset timer" onClick={() => { setRunning(false); setSeconds(25 * 60); }}>
             <RefreshCcw size={18} />
           </button>
+          <button className="icon-btn" type="button" title="Reduce five minutes" aria-label="Reduce five minutes" onClick={() => setSeconds((value) => Math.max(0, value - 5 * 60))}>
+            <Minus size={18} />
+          </button>
+          <button className="icon-btn" type="button" title="Add five minutes" aria-label="Add five minutes" onClick={() => setSeconds((value) => value + 5 * 60)}>
+            <Plus size={18} />
+          </button>
         </div>
       </div>
-      <div className="sound-row">
-        <button
-          type="button"
-          className={activeSound === 'rain' ? 'active' : ''}
-          onClick={() => handleSoundToggle('rain')}
-        >
-          <Music2 size={17} /> Calm Chimes
-          {activeSound === 'rain' && <span className="playing-pulse" />}
-        </button>
-        <button
-          type="button"
-          className={activeSound === 'lofi' ? 'active' : ''}
-          onClick={() => handleSoundToggle('lofi')}
-        >
-          <Music2 size={17} /> Lofi Piano
-          {activeSound === 'lofi' && <span className="playing-pulse" />}
-        </button>
-        <button
-          type="button"
-          className={activeSound === 'space' ? 'active' : ''}
-          onClick={() => handleSoundToggle('space')}
-        >
-          <Music2 size={17} /> Cosmic Space
-          {activeSound === 'space' && <span className="playing-pulse" />}
-        </button>
-      </div>
-      <div className="task-input">
-        <input
-          value={draft}
-          onChange={(event) => setDraft(event.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Add a next action"
-        />
-        <button
-          className="icon-btn active"
-          type="button"
-          aria-label="Add task"
-          onClick={addTask}
-        >
-          <Plus size={18} />
-        </button>
-      </div>
-      <div className="task-list">
-        {tasks.map((task) => (
-          <div className={`task ${task.completed ? 'completed' : ''}`} key={task.id}>
-            <button
-              className={`check-btn ${task.completed ? 'checked' : ''}`}
-              type="button"
-              aria-label={task.completed ? 'Mark incomplete' : 'Mark complete'}
-              onClick={() => toggleTask(task.id)}
-            >
-              <Check size={16} />
-            </button>
-            <span className="task-text" onClick={() => toggleTask(task.id)}>
-              {task.text}
-            </span>
-            <button
-              className="delete-btn"
-              type="button"
-              aria-label={`Delete ${task.text}`}
-              onClick={() => deleteTask(task.id)}
-            >
-              <Trash2 size={15} />
-            </button>
-          </div>
-        ))}
-      </div>
-    </section>
-  );
-
-  if (compact) {
-    return mainPanel;
-  }
-
-  return (
-    <div className="focus-grid">
-      {mainPanel}
-      <div className="focus-sidebar">
-        <SpotifyWidget mood={mood} />
-        <div className="mindfulness-tips">
-          <span className="panel-label">Mindful Insights</span>
-          <p className="tip-text" style={{ margin: '8px 0 0', lineHeight: '1.5', color: 'rgba(255,255,255,0.85)' }}>
-            {mood === 'happy' && 'Your momentum is high! Ride this wave to complete creative work, but take a 2-minute breath break between tasks.'}
-            {mood === 'calm' && 'Your emotional state is extremely stable. This is a perfect window for deep planning, technical writing, or reflective analysis.'}
-            {mood === 'focused' && 'Minimize browser tabs and notifications. It takes up to 20 minutes for the human brain to recover deep focus after a small distraction.'}
-            {mood === 'stressed' && 'Mental strain detected. Remember to breathe deeply: inhale for 4s, hold for 4s, exhale for 4s. Take one task at a time.'}
-            {mood === 'angry' && 'High emotional intensity is raw potential. Channel this drive into rapid drafting, speed-coding, or clearing out old backlog tasks!'}
-          </p>
+      <div className="focus-timer-layout">
+        <HourglassTimer running={running} progress={progress} />
+        <div className="focus-time-card">
+          <span className="panel-label">Focus time</span>
+          <strong>{minutes}:{rest}</strong>
+          <p>Use reset to return the hourglass to 25 minutes, or add five minutes when you need a little more space.</p>
         </div>
+      </div>
+      </section>
+
+      <SpotifyWidget mood={mood} />
+
+      <div className="mindfulness-tips">
+        <span className="panel-label" style={{ margin: '0 0 4px 0' }}>Mindful Insights</span>
+        <p className="tip-text" style={{ margin: '8px 0 0', lineHeight: '1.5', textAlign: 'center' }}>
+          {mood === 'happy' && 'Your momentum is high! Ride this wave to complete creative work, but take a 2-minute breath break between tasks.'}
+          {mood === 'calm' && 'Your emotional state is extremely stable. This is a perfect window for deep planning, technical writing, or reflective analysis.'}
+          {mood === 'focused' && 'Minimize browser tabs and notifications. It takes up to 20 minutes for the human brain to recover deep focus after a small distraction.'}
+          {mood === 'stressed' && 'Mental strain detected. Remember to breathe deeply: inhale for 4s, hold for 4s, exhale for 4s. Take one task at a time.'}
+          {mood === 'angry' && 'High emotional intensity is raw potential. Channel this drive into rapid drafting, speed-coding, or clearing out old backlog tasks!'}
+        </p>
       </div>
     </div>
   );
@@ -1002,10 +1464,10 @@ function Analytics() {
           <h3>Mood history</h3>
           <ResponsiveContainer width="100%" height={270}>
             <AreaChart data={HISTORY}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,.18)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--panel-border)" />
               <XAxis dataKey="day" stroke="currentColor" />
               <YAxis stroke="currentColor" />
-              <Tooltip contentStyle={{ background: '#111827', border: '0', borderRadius: 8 }} />
+              <Tooltip contentStyle={{ background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', borderRadius: 8, color: 'var(--text-app)' }} />
               <Area type="monotone" dataKey="focus" stackId="1" stroke={theme.accent} fill={theme.accent} fillOpacity={0.55} />
               <Area type="monotone" dataKey="calm" stackId="1" stroke="#5eead4" fill="#5eead4" fillOpacity={0.35} />
               <Area type="monotone" dataKey="stress" stackId="1" stroke="#fb7185" fill="#fb7185" fillOpacity={0.22} />
@@ -1016,10 +1478,10 @@ function Analytics() {
           <h3>Current scan</h3>
           <ResponsiveContainer width="100%" height={270}>
             <BarChart data={bars}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,.18)" />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--panel-border)" />
               <XAxis dataKey="name" stroke="currentColor" />
               <YAxis stroke="currentColor" />
-              <Tooltip contentStyle={{ background: '#111827', border: '0', borderRadius: 8 }} />
+              <Tooltip contentStyle={{ background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', borderRadius: 8, color: 'var(--text-app)' }} />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                 {bars.map((entry, index) => (
                   <Cell key={entry.name} fill={[theme.accent, '#fb7185', '#a7f3d0', '#38bdf8'][index]} />
@@ -1035,9 +1497,151 @@ function Analytics() {
 
 function Home({ setView, onOpenCinema }) {
   const { mood } = useMood();
+  const guideCards = [
+    {
+      title: 'Scan Your Mood',
+      icon: Brain,
+      copy: 'Write down a brief journal sentence or click a mood preset. Our AI engine scans your emotional signals and immediately transforms the entire site colors, soundscapes, and virtual space.',
+      bullets: [
+        'Advanced tone & sentiment interpretation',
+        'Automatic HSL color palette mapping',
+        'Intelligent assistant guidance updates',
+        'Instant environment visualizer sync'
+      ]
+    },
+    {
+      title: 'Reflective Planning',
+      icon: Check,
+      copy: 'Organize your goals, list next actions, and design your day around your exact cognitive capacity. No stressful timers or rigid schedules - pure focus on intentional work.',
+      bullets: [
+        'Cognitive capacity task sorting',
+        'Mindful lists free of deadline pressure',
+        'Beautiful interactive completion markers',
+        'Ambient selectors for calm reflection'
+      ]
+    },
+    {
+      title: 'Deep Hourglass Focus',
+      icon: Hourglass,
+      copy: 'Start the focus timer and watch the sand flow in our custom CSS hourglass animation. Pause, add buffer minutes, or reset the countdown smoothly as your rhythm requires.',
+      bullets: [
+        'Fluid CSS hourglass physical sand flow',
+        'Precise buffer and reset timer keys',
+        'Ambient Spotify playlist integration',
+        'Cognitive focus mindfulness insights'
+      ]
+    },
+    {
+      title: 'Cozy Cinema Escape',
+      icon: Film,
+      copy: 'Wind down or find inspiration by exploring over 600+ premium film recommendations, handpicked and updated in real-time to match your current active state perfectly.',
+      bullets: [
+        'Over 600+ hand-sorted movies',
+        'Direct title search & platform tags',
+        'HD review cards & platform badges',
+        'A perfect post-work restorative window'
+      ]
+    }
+  ];
   return (
     <>
       <Hero setView={setView} />
+      <section className="home-guide" aria-label="Features Showcase">
+        <div className="section-head" style={{ marginBottom: '40px' }}>
+          <div>
+            <span className="panel-label">Immersive Showcase</span>
+            <h2>Transition from Mood to Momentum</h2>
+            <p className="section-intro-text">
+              Explore how MoodScape dynamically aligns your emotional states with tailored workspaces, intelligent guides, and sensory soundscapes. Scroll down to discover our features.
+            </p>
+          </div>
+        </div>
+        
+        <div className="showcase-stack">
+          {guideCards.map((card, index) => {
+            const Icon = card.icon;
+            const isEven = index % 2 === 0;
+            return (
+              <motion.article
+                className={`showcase-section ${isEven ? 'row-normal' : 'row-reverse'}`}
+                key={card.title}
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.3 }}
+                transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+              >
+                <div className="showcase-content">
+                  <div className="showcase-header">
+                    <div className="showcase-badge">
+                      <Icon size={18} />
+                      <span>Step {index + 1}</span>
+                    </div>
+                  </div>
+                  <h3>{card.title}</h3>
+                  <p className="showcase-description">{card.copy}</p>
+                  <ul className="showcase-bullets">
+                    {card.bullets.map((bullet, idx) => (
+                      <li key={idx}>
+                        <Check size={14} className="bullet-check" />
+                        <span>{bullet}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                
+                <div className="showcase-visual-side">
+                  <div className="showcase-visual-box">
+                    <div className="showcase-visual-inner">
+                      {index === 0 && (
+                        <div className="visual-mock-scanner">
+                          <div className="mock-scanner-orb animate-pulse" />
+                          <div className="mock-scanner-log">
+                            <span>Scanning tone: "I feel slightly stressed but focused..."</span>
+                            <div className="mock-scanner-bar" />
+                          </div>
+                        </div>
+                      )}
+                      {index === 1 && (
+                        <div className="visual-mock-planner">
+                          <div className="mock-todo-item checked">
+                            <Check size={12} />
+                            <span>Prepare presentation calmly</span>
+                          </div>
+                          <div className="mock-todo-item">
+                            <span className="bullet-empty" />
+                            <span>List immediate action step</span>
+                          </div>
+                          <div className="mock-todo-item">
+                            <span className="bullet-empty" />
+                            <span>Review priority list</span>
+                          </div>
+                        </div>
+                      )}
+                      {index === 2 && (
+                        <div className="visual-mock-focus">
+                          <Hourglass size={48} className="mock-hourglass-rotating animate-spin-slow" />
+                          <span className="timer-text">25:00</span>
+                        </div>
+                      )}
+                      {index === 3 && (
+                        <div className="visual-mock-cinema">
+                          <div className="mock-movie-row">
+                            <div className="mock-movie-card" />
+                            <div className="mock-movie-card" />
+                            <div className="mock-movie-card" />
+                          </div>
+                          <span className="mock-label">600+ Mood Picks</span>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              </motion.article>
+            );
+          })}
+        </div>
+      </section>
+      
       <section className="below-hero">
         <div className="section-head">
           <div>
@@ -1050,7 +1654,7 @@ function Home({ setView, onOpenCinema }) {
           <div className="mood-escape-banner" style={{ marginTop: '28px', textAlign: 'center' }}>
             <button
               type="button"
-              className="primary-btn escape-btn-accent animate-pulse-border"
+              className="primary-btn escape-btn-accent"
               onClick={onOpenCinema}
               style={{
                 padding: '0 24px',
@@ -1113,7 +1717,7 @@ function generateMovieDatabase() {
     { title: 'The Dark Knight', platform: 'Prime Video', rating: '9.0', genre: 'Action / Crime', poster: 'https://image.tmdb.org/t/p/w500/1hKdG7nZ79wzH2XQ7D304zGg58R.jpg', mood: 'angry', description: 'A massive, dark, and highly captivating battle of order versus absolute chaos that commands your full attention.' }
   ];
 
-  const generated = [...realMovies];
+  const generated = realMovies.map((movie, index) => ({ ...movie, id: `featured-${index + 1}` }));
   
   const movieNouns = [
     "Echo", "Star", "Shadow", "River", "Destiny", "Dream", "Horizon", "Secret", "Whisper", 
@@ -1203,6 +1807,43 @@ function generateMovieDatabase() {
 
 const movieDatabase = generateMovieDatabase();
 
+const posterPalettes = {
+  happy: ['#f8c94f', '#f97316', '#ec4899'],
+  calm: ['#5eead4', '#38bdf8', '#818cf8'],
+  focused: ['#0f172a', '#14b8a6', '#38bdf8'],
+  stressed: ['#312e81', '#7c3aed', '#fb7185'],
+  angry: ['#020617', '#991b1b', '#f43f5e']
+};
+
+function MoviePoster({ movie, className = 'movie-banner' }) {
+  const colors = posterPalettes[movie.mood] || posterPalettes.focused;
+  return (
+    <div
+      className="poster-frame"
+      style={{
+        '--poster-a': colors[0],
+        '--poster-b': colors[1],
+        '--poster-c': colors[2]
+      }}
+    >
+      <div className="poster-fallback" aria-hidden="true">
+        <span className="poster-studio">{movie.platform}</span>
+        <strong>{movie.title}</strong>
+        <small>{movie.genre}</small>
+      </div>
+      <img
+        src={movie.poster}
+        alt={movie.title}
+        className={className}
+        loading="lazy"
+        onError={(event) => {
+          event.currentTarget.style.display = 'none';
+        }}
+      />
+    </div>
+  );
+}
+
 function MoodScanModal({ isOpen, onClose }) {
   const { theme, journal, setJournal, analyzeJournal } = useMood();
   const usePlaceholder = (text) => {
@@ -1257,11 +1898,14 @@ function MoodScanModal({ isOpen, onClose }) {
                 onChange={(event) => setJournal(event.target.value)}
                 placeholder="Write down a sentence about your day, pressure, study, or goals..."
                 aria-label="Mood journal input"
+                className="scan-textarea"
                 style={{
                   minHeight: '110px',
                   padding: '12px',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  background: 'rgba(255,255,255,0.06)'
+                  border: '1px solid var(--panel-border)',
+                  background: 'var(--input-bg)',
+                  color: 'var(--text-app)',
+                  borderRadius: '8px'
                 }}
               />
               <div className="scan-placeholders" style={{ marginTop: '10px' }}>
@@ -1304,6 +1948,7 @@ function MoodScanModal({ isOpen, onClose }) {
 function CinemaEscape({ isOpen, onClose, mood }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [page, setPage] = useState(1);
+  const [selectedMovie, setSelectedMovie] = useState(null);
   const itemsPerPage = 20;
 
   const moodMovies = useMemo(() => {
@@ -1319,6 +1964,14 @@ function CinemaEscape({ isOpen, onClose, mood }) {
   useEffect(() => {
     setPage(1);
   }, [mood, searchTerm]);
+
+  useEffect(() => {
+    if (!moodMovies.length) {
+      setSelectedMovie(null);
+      return;
+    }
+    setSelectedMovie((current) => (current && moodMovies.some((movie) => movie.id === current.id) ? current : moodMovies[0]));
+  }, [moodMovies]);
 
   const visibleMovies = useMemo(() => {
     return moodMovies.slice(0, page * itemsPerPage);
@@ -1363,24 +2016,65 @@ function CinemaEscape({ isOpen, onClose, mood }) {
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder={`Search 600+ ${MOODS[mood].label} movies...`}
+                className="search-input"
                 style={{
                   width: '100%',
                   padding: '0 16px',
                   minHeight: '44px',
                   borderRadius: '8px',
-                  border: '1px solid rgba(255,255,255,0.15)',
-                  background: 'rgba(255,255,255,0.06)'
+                  border: '1px solid var(--panel-border)',
+                  background: 'var(--input-bg)',
+                  color: 'var(--text-app)'
                 }}
               />
             </div>
+
+            {selectedMovie && (
+              <section className="web-player-shell" aria-label={`${selectedMovie.platform} web player preview`}>
+                <div className="web-player-screen">
+                  <MoviePoster movie={selectedMovie} className="web-player-backdrop" />
+                  <div className="web-player-vignette" />
+                  <div className="web-player-topbar">
+                    <span className={selectedMovie.platform === 'Netflix' ? 'stream-brand netflix' : 'stream-brand prime'}>
+                      {selectedMovie.platform}
+                    </span>
+                    <span className="stream-quality">HD</span>
+                  </div>
+                  <div className="web-player-copy">
+                    <span className="panel-label">Now Previewing</span>
+                    <h3>{selectedMovie.title}</h3>
+                    <p>{selectedMovie.description}</p>
+                  </div>
+                  <div className="web-player-controls">
+                    <button type="button" className="player-play" aria-label="Play preview">
+                      <CirclePlay size={34} />
+                    </button>
+                    <div className="player-timeline">
+                      <span />
+                    </div>
+                    <span className="player-time">00:00 / 02:14</span>
+                  </div>
+                </div>
+                <aside className="web-player-details">
+                  <div className="mini-poster">
+                    <MoviePoster movie={selectedMovie} />
+                  </div>
+                  <div>
+                    <span className="movie-genre">{selectedMovie.genre}</span>
+                    <h3>{selectedMovie.title}</h3>
+                    <p>{selectedMovie.platform} mood pick with a {selectedMovie.rating} audience score.</p>
+                  </div>
+                </aside>
+              </section>
+            )}
             
             {visibleMovies.length > 0 ? (
               <>
                 <div className="movies-grid">
                   {visibleMovies.map((movie) => (
-                    <div className="movie-card" key={movie.id}>
+                    <button className={selectedMovie?.id === movie.id ? 'movie-card selected' : 'movie-card'} key={movie.id} type="button" onClick={() => setSelectedMovie(movie)}>
                       <div className="movie-banner-wrap" style={{ aspectRatio: '2 / 3' }}>
-                        <img src={movie.poster} alt={movie.title} className="movie-banner" loading="lazy" />
+                        <MoviePoster movie={movie} />
                         <div className="movie-platform-badge" style={{ '--badge-color': movie.platform === 'Netflix' ? '#e50914' : '#00a8e1' }}>
                           {movie.platform}
                         </div>
@@ -1393,7 +2087,7 @@ function CinemaEscape({ isOpen, onClose, mood }) {
                         <span className="movie-genre">{movie.genre}</span>
                         <p className="movie-desc">{movie.description}</p>
                       </div>
-                    </div>
+                    </button>
                   ))}
                 </div>
                 {moodMovies.length > page * itemsPerPage && (
@@ -1410,7 +2104,7 @@ function CinemaEscape({ isOpen, onClose, mood }) {
                 )}
               </>
             ) : (
-              <div style={{ textAlign: 'center', padding: '48px 0', color: 'rgba(255,255,255,0.5)' }}>
+              <div style={{ textAlign: 'center', padding: '48px 0', color: 'var(--text-muted)' }}>
                 No recommendations matched your search. Try typing another keyword!
               </div>
             )}
@@ -1421,24 +2115,157 @@ function CinemaEscape({ isOpen, onClose, mood }) {
   );
 }
 
+function SiteFooter() {
+  return (
+    <footer className="site-footer">
+      <div className="footer-content">
+        <div className="footer-main">
+          <div className="footer-brand">
+            <Sparkles size={16} style={{ color: 'var(--mood-accent)' }} />
+            <span>MoodScape</span>
+          </div>
+          <p className="footer-tagline">
+            A beautiful responsive emotional workspace aligning focus time, reflective planning, and cozy breaks around your tone.
+          </p>
+        </div>
+        
+        <div className="footer-divider" />
+        
+        <div className="footer-author-card">
+          <span>Designed & Crafted by</span>
+          <strong className="author-name">Akshat Vats</strong>
+          <span className="author-affiliation" style={{ display: 'block', fontSize: '0.82rem', color: 'var(--text-muted)', marginTop: '2px', fontWeight: '500' }}>
+            🎓 ABES Engineering College, Ghaziabad
+          </span>
+          
+          <div className="author-connect-tiles" style={{ display: 'flex', gap: '12px', justifyContent: 'center', marginTop: '16px' }}>
+            <a 
+              href="https://www.linkedin.com/in/akshat-vats-b6b1692b6/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="connect-tile tile-linkedin"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                color: '#fff',
+                background: '#0077b5',
+                boxShadow: '0 4px 12px rgba(0, 119, 181, 0.25)',
+                transition: 'transform 0.2s ease, filter 0.2s ease'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.1)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none'; }}
+              aria-label="LinkedIn Profile"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.779-1.75-1.75s.784-1.75 1.75-1.75 1.75.779 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+              </svg>
+            </a>
+            
+            <a 
+              href="https://www.instagram.com/who_akshatvats/#" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="connect-tile tile-instagram"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                color: '#fff',
+                background: 'linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%)',
+                boxShadow: '0 4px 12px rgba(220, 39, 67, 0.25)',
+                transition: 'transform 0.2s ease, filter 0.2s ease'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.1)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none'; }}
+              aria-label="Instagram Profile"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.051.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+              </svg>
+            </a>
+            
+            <a 
+              href="https://wa.me/917505475455" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="connect-tile tile-whatsapp"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '42px',
+                height: '42px',
+                borderRadius: '50%',
+                color: '#fff',
+                background: '#25D366',
+                boxShadow: '0 4px 12px rgba(37, 211, 102, 0.25)',
+                transition: 'transform 0.2s ease, filter 0.2s ease'
+              }}
+              onMouseEnter={(e) => { e.currentTarget.style.transform = 'translateY(-2px)'; e.currentTarget.style.filter = 'brightness(1.1)'; }}
+              onMouseLeave={(e) => { e.currentTarget.style.transform = 'none'; e.currentTarget.style.filter = 'none'; }}
+              aria-label="WhatsApp Chat"
+            >
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946C.06 5.348 5.397.01 12.008.01c3.202.001 6.212 1.246 8.477 3.514 2.266 2.268 3.507 5.28 3.505 8.484-.004 6.657-5.34 11.997-11.953 11.997-2.005-.001-3.973-.502-5.724-1.458L0 24zm6.59-4.846c1.666.988 3.31 1.492 5.361 1.493 5.4 0 9.79-4.386 9.794-9.786.002-2.614-1.015-5.074-2.864-6.928C17.086 2.08 14.636 1.062 12.012 1.06 6.615 1.06 2.223 5.447 2.22 10.849c-.001 2.087.549 4.12 1.595 5.922l-.999 3.65 3.831-.967zm12.355-6.756c-.328-.164-1.942-.958-2.242-1.068-.3-.11-.518-.165-.736.164-.219.329-.847 1.068-1.039 1.287-.192.219-.384.246-.712.083-.328-.164-1.386-.511-2.641-1.63-1.011-.902-1.694-2.017-1.892-2.346-.198-.328-.021-.506.143-.67.147-.147.328-.384.492-.575.164-.192.219-.328.328-.548.11-.219.055-.411-.027-.575-.082-.164-.736-1.776-1.009-2.434-.266-.643-.538-.553-.736-.563-.19-.01-.41-.01-.629-.01-.219 0-.575.082-.876.411-.3.328-1.149 1.123-1.149 2.738 0 1.615 1.176 3.176 1.341 3.395.164.219 2.314 3.533 5.605 4.954.783.338 1.395.54 1.872.69.788.25 1.505.215 2.072.13.632-.094 1.942-.794 2.216-1.56.274-.767.274-1.424.192-1.56-.082-.136-.3-.219-.629-.383z"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </div>
+      <div className="footer-copyright">
+        <span>© {new Date().getFullYear()} MoodScape by Akshat Vats. All rights reserved.</span>
+        <span>Made with ❤️ in India</span>
+      </div>
+    </footer>
+  );
+}
+
 function App() {
   const { mood } = useMood();
   const [view, setView] = useState('home');
   const [cinemaOpen, setCinemaOpen] = useState(false);
   const [scanOpen, setScanOpen] = useState(false);
+  const [themeMode, setThemeMode] = useState('dark');
+
+  useEffect(() => {
+    if (themeMode === 'light') {
+      document.documentElement.classList.add('light-mode');
+    } else {
+      document.documentElement.classList.remove('light-mode');
+    }
+  }, [themeMode]);
+
+  const toggleTheme = () => {
+    setThemeMode((current) => (current === 'dark' ? 'light' : 'dark'));
+  };
+
   return (
     <main className="app-shell">
-      <Nav view={view} setView={setView} onOpenScan={() => setScanOpen(true)} />
+      <Nav 
+        view={view} 
+        setView={setView} 
+        onOpenScan={() => setScanOpen(true)} 
+        themeMode={themeMode}
+        toggleTheme={toggleTheme}
+      />
       <AnimatePresence mode="wait">
         <motion.div key={view} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -12 }} transition={{ duration: 0.28 }}>
           {view === 'home' && <Home setView={setView} onOpenCinema={() => setCinemaOpen(true)} />}
-          {view === 'dashboard' && <Dashboard onOpenCinema={() => setCinemaOpen(true)} />}
+          {view === 'planning' && <ReflectivePlanning />}
           {view === 'analytics' && <Analytics />}
           {view === 'focus' && <FocusTools />}
         </motion.div>
       </AnimatePresence>
       <CinemaEscape isOpen={cinemaOpen} onClose={() => setCinemaOpen(false)} mood={mood} />
       <MoodScanModal isOpen={scanOpen} onClose={() => setScanOpen(false)} />
+      {view === 'home' && <SiteFooter />}
     </main>
   );
 }
