@@ -2501,3 +2501,17 @@ input {
   }
 }
 
+/* Premium Image Masked Text Styling */
+.aesthetic-mask-text {
+  background-image: var(--text-mask-url, var(--mood-gradient));
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  -webkit-background-clip: text !important;
+  background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+  display: inline-block;
+  outline: none;
+}
+

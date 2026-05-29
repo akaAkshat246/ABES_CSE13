@@ -355,46 +355,27 @@ function MoodSelector() {
   );
 }
 
-function ImageMaskText({ text, image, imageFit = 'cover', imagePercent = 100, font = {}, textColor = 'var(--mood-accent)' }) {
-  const bgSize = useMemo(() => {
-    if (imageFit === 'cover') return 'cover';
-    if (imageFit === 'contain') return 'contain';
-    return `${imagePercent}%`;
-  }, [imageFit, imagePercent]);
-
+function ImageMaskText({ text, image, font = {} }) {
   const useImageMask = image && image.src && image.src !== '';
-
-  const maskStyles = useImageMask ? {
-    backgroundImage: `url(${image.src})`,
-    backgroundSize: bgSize,
-    backgroundPosition: 'center',
-    backgroundRepeat: 'no-repeat',
-    WebkitBackgroundClip: 'text',
-    WebkitTextFillColor: 'transparent',
-    backgroundClip: 'text',
-    color: 'transparent'
-  } : {
-    color: textColor
-  };
+  const maskUrl = useImageMask ? `url(${image.src})` : 'var(--mood-gradient)';
 
   return (
-    <div className="mask-text-wrapper" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
-      <span
-        style={{
-          ...font,
-          ...maskStyles,
-          display: 'inline-block',
-          lineHeight: font.lineHeight || 1.1,
-          fontSize: font.fontSize || 'inherit',
-          fontWeight: font.fontWeight || 'inherit',
-          fontStyle: font.fontStyle || 'inherit',
-          textAlign: font.textAlign || 'center'
-        }}
-        aria-label={text}
-      >
-        {text}
-      </span>
-    </div>
+    <span
+      className="aesthetic-mask-text"
+      style={{
+        ...font,
+        '--text-mask-url': maskUrl,
+        fontSize: font.fontSize || 'inherit',
+        fontWeight: font.fontWeight || 'inherit',
+        lineHeight: font.lineHeight || 1.1,
+        letterSpacing: font.letterSpacing || 'inherit',
+        fontFamily: font.fontFamily || 'inherit',
+        textAlign: font.textAlign || 'center'
+      }}
+      aria-label={text}
+    >
+      {text}
+    </span>
   );
 }
 
