@@ -1864,21 +1864,21 @@ input {
   gap: 8px;
   font-weight: 900;
   font-size: 1.15rem;
-  color: #fff;
+  color: var(--text-app);
   letter-spacing: 0.5px;
 }
 
 .footer-tagline {
   font-size: 0.9rem;
   line-height: 1.5;
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--text-muted);
   margin: 0;
 }
 
 .footer-divider {
   width: 1px;
   height: 80px;
-  background: rgba(255, 255, 255, 0.1);
+  background: var(--panel-border);
   justify-self: center;
 }
 
@@ -1892,29 +1892,29 @@ input {
   font-size: 0.72rem;
   font-weight: 800;
   text-transform: uppercase;
-  color: var(--mood-accent);
+  color: var(--text-accent);
   letter-spacing: 0.8px;
 }
 
 .author-name {
   font-size: 1.45rem;
   font-weight: 900;
-  color: #fff;
+  color: var(--text-app);
   letter-spacing: -0.2px;
 }
 
 .author-bio {
   font-size: 0.86rem;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.76);
+  color: var(--text-muted);
   margin: 0;
 }
 
 .footer-copyright {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  border-top: 1px solid var(--panel-border);
   padding-top: 18px;
   font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.45);
+  color: var(--text-muted);
   display: flex;
   justify-content: space-between;
   align-items: center;
