@@ -376,9 +376,9 @@ function StatCard({ label, value, icon: Icon }) {
 }
 
 function HappinessSustainer() {
-  const [sleep, setSleep] = useState(true);
-  const [boundaries, setBoundaries] = useState(true);
-  const [breakTaken, setBreakTaken] = useState(true);
+  const [sleep, setSleep] = useState(false);
+  const [boundaries, setBoundaries] = useState(false);
+  const [breakTaken, setBreakTaken] = useState(false);
   const [gratitude, setGratitude] = useState(false);
 
   const score = (sleep ? 25 : 0) + (boundaries ? 25 : 0) + (breakTaken ? 25 : 0) + (gratitude ? 25 : 0);
