@@ -1465,8 +1465,8 @@ function Analytics() {
           <ResponsiveContainer width="100%" height={270}>
             <AreaChart data={HISTORY}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--panel-border)" />
-              <XAxis dataKey="day" stroke="currentColor" />
-              <YAxis stroke="currentColor" />
+              <XAxis dataKey="day" stroke="currentColor" tick={{ fill: 'currentColor', fontSize: 11 }} />
+              <YAxis stroke="currentColor" tick={{ fill: 'currentColor', fontSize: 11 }} />
               <Tooltip contentStyle={{ background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', borderRadius: 8, color: 'var(--text-app)' }} />
               <Area type="monotone" dataKey="focus" stackId="1" stroke={theme.accent} fill={theme.accent} fillOpacity={0.55} />
               <Area type="monotone" dataKey="calm" stackId="1" stroke="#5eead4" fill="#5eead4" fillOpacity={0.35} />
@@ -1479,8 +1479,8 @@ function Analytics() {
           <ResponsiveContainer width="100%" height={270}>
             <BarChart data={bars}>
               <CartesianGrid strokeDasharray="3 3" stroke="var(--panel-border)" />
-              <XAxis dataKey="name" stroke="currentColor" />
-              <YAxis stroke="currentColor" />
+              <XAxis dataKey="name" stroke="currentColor" tick={{ fill: 'currentColor', fontSize: 11 }} />
+              <YAxis stroke="currentColor" tick={{ fill: 'currentColor', fontSize: 11 }} />
               <Tooltip contentStyle={{ background: 'var(--panel-bg)', border: '1px solid var(--panel-border)', borderRadius: 8, color: 'var(--text-app)' }} />
               <Bar dataKey="value" radius={[8, 8, 0, 0]}>
                 {bars.map((entry, index) => (
