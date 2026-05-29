@@ -18,6 +18,7 @@
   --text-muted: rgba(248, 250, 252, 0.62);
   --card-hover-bg: rgba(255, 255, 255, 0.06);
   --input-bg: rgba(255, 255, 255, 0.04);
+  --scrollbar-thumb: rgba(255, 255, 255, 0.22);
 
   background: var(--bg-app);
   color: var(--text-app);
@@ -31,14 +32,36 @@
   --panel-bg: rgba(255, 255, 255, 0.76);
   --panel-border: rgba(15, 23, 42, 0.07);
   --panel-shadow: rgba(15, 23, 42, 0.03);
-  --text-muted: rgba(15, 23, 42, 0.62);
-  --card-hover-bg: rgba(15, 23, 42, 0.03);
-  --input-bg: rgba(15, 23, 42, 0.02);
+  --text-muted: rgba(15, 23, 42, 0.76); /* Increased from 0.62 for high contrast readability */
+  --card-hover-bg: rgba(15, 23, 42, 0.05); /* Slightly darker for clear hover feedback */
+  --input-bg: rgba(15, 23, 42, 0.03); /* Slightly darker for input visibility */
   --text-accent: color-mix(in srgb, var(--mood-accent) 76%, #000);
+  --scrollbar-thumb: rgba(15, 23, 42, 0.24); /* Perfectly visible but muted scrollbars in light mode */
 }
 
 * {
   box-sizing: border-box;
+  scrollbar-width: thin;
+  scrollbar-color: var(--scrollbar-thumb) transparent;
+}
+
+/* Premium Global Scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--scrollbar-thumb);
+  border-radius: 99px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--mood-accent);
 }
 
 h1,
@@ -271,6 +294,8 @@ h3 {
   pointer-events: none;
   background: none;
   box-shadow: none;
+  mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 92%);
+  -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 0%, rgba(0, 0, 0, 1) 60%, rgba(0, 0, 0, 0) 92%);
 }
 
 .hero > .scene-wrap canvas {
@@ -631,7 +656,7 @@ input {
 
 .task.completed {
   opacity: 0.5;
-  background: rgba(255, 255, 255, 0.02);
+  background: var(--input-bg);
   border-color: transparent;
 }
 
@@ -931,23 +956,7 @@ input {
   box-sizing: border-box;
 }
 
-/* Custom mini scrollbar for song dropdown catalog */
-.spotify-dropdown-menu::-webkit-scrollbar {
-  width: 4px;
-}
 
-.spotify-dropdown-menu::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.spotify-dropdown-menu::-webkit-scrollbar-thumb {
-  background: var(--panel-border);
-  border-radius: 4px;
-}
-
-.spotify-dropdown-menu::-webkit-scrollbar-thumb:hover {
-  background: var(--mood-accent);
-}
 
 .spotify-dropdown-item {
   display: flex;
@@ -979,23 +988,7 @@ input {
   padding-right: 6px;
 }
 
-/* Custom mini scrollbar for song catalog */
-.spotify-track-list::-webkit-scrollbar {
-  width: 4px;
-}
 
-.spotify-track-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.spotify-track-list::-webkit-scrollbar-thumb {
-  background: var(--panel-border);
-  border-radius: 4px;
-}
-
-.spotify-track-list::-webkit-scrollbar-thumb:hover {
-  background: var(--mood-accent);
-}
 
 .spotify-track-row {
   display: flex;
@@ -1599,7 +1592,7 @@ input {
 .scan-textarea:focus {
   border-color: var(--mood-accent) !important;
   box-shadow: 0 0 14px color-mix(in srgb, var(--mood-accent) 28%, transparent) !important;
-  background: rgba(255, 255, 255, 0.09) !important;
+  background: color-mix(in srgb, var(--mood-accent) 4%, var(--panel-bg)) !important;
 }
 
 .scan-placeholders button {
@@ -1607,7 +1600,7 @@ input {
 }
 
 .scan-placeholders button:hover {
-  background: rgba(45, 212, 191, 0.12) !important;
+  background: color-mix(in srgb, var(--mood-accent) 12%, transparent) !important;
   border-color: var(--mood-accent) !important;
   transform: translateY(-1px);
 }
@@ -2291,7 +2284,7 @@ input {
 .sustainer-toggle-btn.active {
   border-color: var(--mood-accent) !important;
   background: color-mix(in srgb, var(--mood-accent) 8%, transparent) !important;
-  color: var(--mood-accent) !important;
+  color: var(--text-accent) !important;
   opacity: 1;
   box-shadow: 0 0 15px color-mix(in srgb, var(--mood-accent) 12%, transparent);
 }
