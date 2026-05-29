@@ -1499,6 +1499,118 @@ function Analytics() {
   );
 }
 
+function TypewriterEffect(props) {
+  const {
+    words = [{ word: "Hello" }, { word: "World" }, { word: "Framer" }],
+    typingSpeed = 100,
+    deletingSpeed = 60,
+    pauseDuration = 1000,
+    cursorColor = "#FFFFFF",
+    cursorWidth = 2,
+    cursorHeight = 100,
+    font,
+    textColor = "#FFFFFF",
+    style
+  } = props;
+  
+  const [displayed, setDisplayed] = useState("");
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [wordIndex, setWordIndex] = useState(0);
+  const [charIndex, setCharIndex] = useState(0);
+  const [pause, setPause] = useState(false);
+  const [showCursor, setShowCursor] = useState(true);
+  const timeoutRef = useRef(null);
+  const blinkRef = useRef(null);
+  const currentWord = words.length > 0 ? words[wordIndex % words.length].word : "";
+
+  // Typing/Deleting Effect
+  useEffect(() => {
+    if (pause) return;
+    if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    let delay = typingSpeed;
+    if (!isDeleting && charIndex < currentWord.length) {
+      delay = typingSpeed;
+      timeoutRef.current = window.setTimeout(() => {
+        setDisplayed(currentWord.slice(0, charIndex + 1));
+        setCharIndex(charIndex + 1);
+      }, delay);
+    } else if (!isDeleting && charIndex === currentWord.length) {
+      // Pause at end of word
+      timeoutRef.current = window.setTimeout(() => {
+        setIsDeleting(true);
+      }, pauseDuration);
+    } else if (isDeleting && charIndex > 0) {
+      delay = deletingSpeed;
+      timeoutRef.current = window.setTimeout(() => {
+        setDisplayed(currentWord.slice(0, charIndex - 1));
+        setCharIndex(charIndex - 1);
+      }, delay);
+    } else if (isDeleting && charIndex === 0) {
+      // Pause before next word
+      timeoutRef.current = window.setTimeout(() => {
+        setIsDeleting(false);
+        setWordIndex((wordIndex + 1) % words.length);
+      }, pauseDuration);
+    }
+    return () => {
+      if (timeoutRef.current) clearTimeout(timeoutRef.current);
+    };
+  }, [charIndex, isDeleting, pause, wordIndex, currentWord, typingSpeed, deletingSpeed, pauseDuration, words.length]);
+
+  // Reset charIndex when wordIndex changes
+  useEffect(() => {
+    if (!isDeleting) {
+      setCharIndex(0);
+    }
+  }, [wordIndex, isDeleting]);
+
+  // Blinking Cursor Effect
+  useEffect(() => {
+    if (blinkRef.current) clearInterval(blinkRef.current);
+    blinkRef.current = window.setInterval(() => {
+      setShowCursor(v => !v);
+    }, 500);
+    return () => {
+      if (blinkRef.current) clearInterval(blinkRef.current);
+    };
+  }, []);
+
+  return (
+    <span
+      style={{
+        ...style,
+        ...font,
+        color: textColor,
+        display: "inline-flex",
+        alignItems: "center",
+        minWidth: 1,
+        minHeight: 1,
+        width: "max-content",
+        height: "max-content",
+        whiteSpace: "pre"
+      }}
+      aria-live="polite"
+    >
+      {displayed}
+      <span
+        aria-hidden="true"
+        style={{
+          display: "inline-block",
+          background: cursorColor,
+          width: cursorWidth,
+          height: cursorHeight === 100 ? '1em' : `${cursorHeight}%`,
+          marginLeft: 2,
+          marginRight: 2,
+          verticalAlign: "baseline",
+          opacity: showCursor ? 1 : 0,
+          transition: "opacity 0.1s",
+          borderRadius: 2
+        }}
+      />
+    </span>
+  );
+}
+
 function Home({ setView, onOpenCinema }) {
   const { mood } = useMood();
   const guideCards = [
@@ -1554,7 +1666,26 @@ function Home({ setView, onOpenCinema }) {
         <div className="section-head" style={{ marginBottom: '40px' }}>
           <div>
             <span className="panel-label">Immersive Showcase</span>
-            <h2>Transition from Mood to Momentum</h2>
+            <h2>
+              Transition from Mood to{' '}
+              <TypewriterEffect
+                words={[
+                  { word: 'Momentum' },
+                  { word: 'Focus' },
+                  { word: 'Calm' },
+                  { word: 'Clarity' },
+                  { word: 'Energy' }
+                ]}
+                typingSpeed={110}
+                deletingSpeed={70}
+                pauseDuration={1600}
+                cursorColor="var(--text-accent)"
+                cursorWidth={3}
+                cursorHeight={90}
+                textColor="var(--text-accent)"
+                style={{ verticalAlign: 'bottom' }}
+              />
+            </h2>
             <p className="section-intro-text">
               Explore how MoodScape dynamically aligns your emotional states with tailored workspaces, intelligent guides, and sensory soundscapes. Scroll down to discover our features.
             </p>
