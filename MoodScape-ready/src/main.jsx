@@ -471,14 +471,14 @@ function HappinessSustainer() {
             background: 'var(--input-bg)',
             transition: 'all 0.3s ease'
           }}>
-            <strong style={{ fontSize: '2.2rem', color: 'var(--mood-accent)', fontWeight: '900', letterSpacing: '-0.5px' }}>{happyHours}h</strong>
+            <strong style={{ fontSize: '2.2rem', color: 'var(--text-accent)', fontWeight: '900', letterSpacing: '-0.5px' }}>{happyHours}h</strong>
             <span style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.8px', opacity: 0.7, fontWeight: '700' }}>Happy Runway</span>
           </div>
           
           <div style={{ width: '100%' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem', marginBottom: '6px' }}>
               <span style={{ color: 'var(--text-muted)' }}>Sustainability Score</span>
-              <strong style={{ color: 'var(--mood-accent)' }}>{score}%</strong>
+              <strong style={{ color: 'var(--text-accent)' }}>{score}%</strong>
             </div>
             <div style={{ height: '8px', background: 'var(--input-bg)', borderRadius: '99px', overflow: 'hidden', border: '1px solid var(--panel-border)' }}>
               <div style={{ width: `${score}%`, height: '100%', background: 'var(--mood-accent)', borderRadius: '99px', transition: 'width 0.4s cubic-bezier(0.4, 0, 0.2, 1)' }} />
@@ -1228,7 +1228,7 @@ function SpotifyWidget({ mood }) {
                     <span style={{
                       fontSize: '0.84rem',
                       fontWeight: selectedTrack?.title === track.title ? '700' : '600',
-                      color: selectedTrack?.title === track.title ? 'var(--mood-accent)' : 'var(--text-app)',
+                      color: selectedTrack?.title === track.title ? 'var(--text-accent)' : 'var(--text-app)',
                       whiteSpace: 'nowrap',
                       textOverflow: 'ellipsis',
                       overflow: 'hidden'
@@ -1889,7 +1889,7 @@ function MoodScanModal({ isOpen, onClose }) {
             <div className="analysis-panel-content">
               <div style={{ marginBottom: '14px' }}>
                 <span className="panel-label">Active Environment</span>
-                <strong style={{ display: 'block', fontSize: '1.1rem', marginTop: '4px', color: 'var(--mood-accent)' }}>
+                <strong style={{ display: 'block', fontSize: '1.1rem', marginTop: '4px', color: 'var(--text-accent)' }}>
                   {theme.environment}
                 </strong>
               </div>
@@ -1915,9 +1915,9 @@ function MoodScanModal({ isOpen, onClose }) {
                     type="button"
                     onClick={() => usePlaceholder(item)}
                     style={{
-                      border: '1px solid rgba(45, 212, 191, 0.2)',
-                      background: 'rgba(45, 212, 191, 0.04)',
-                      color: 'var(--mood-accent)',
+                      border: '1px solid color-mix(in srgb, var(--mood-accent) 24%, transparent)',
+                      background: 'color-mix(in srgb, var(--mood-accent) 6%, transparent)',
+                      color: 'var(--text-accent)',
                       padding: '4px 10px',
                       fontSize: '0.76rem',
                       borderRadius: '8px',
