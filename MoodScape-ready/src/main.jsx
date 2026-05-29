@@ -42,6 +42,7 @@ import {
   YAxis
 } from 'recharts';
 import { scanMoodSituation } from './moodSituations';
+import maskImage from './shimmering_fluid_gradient.png';
 import './styles.css';
 
 const MOODS = {
@@ -131,8 +132,8 @@ function useMood() {
 }
 
 function MoodProvider({ children }) {
-  const [mood, setMood] = useState('happy');
-  const [journal, setJournal] = useState('Today is a beautiful day, full of wins and celebration!');
+  const [mood, setMood] = useState('calm');
+  const [journal, setJournal] = useState('Today is a quiet, peaceful day. I am resting and keeping things simple.');
   const [scanResult, setScanResult] = useState(() => scanMoodSituation(journal));
   const theme = useMemo(
     () => ({
@@ -354,6 +355,49 @@ function MoodSelector() {
   );
 }
 
+function ImageMaskText({ text, image, imageFit = 'cover', imagePercent = 100, font = {}, textColor = 'var(--mood-accent)' }) {
+  const bgSize = useMemo(() => {
+    if (imageFit === 'cover') return 'cover';
+    if (imageFit === 'contain') return 'contain';
+    return `${imagePercent}%`;
+  }, [imageFit, imagePercent]);
+
+  const useImageMask = image && image.src && image.src !== '';
+
+  const maskStyles = useImageMask ? {
+    backgroundImage: `url(${image.src})`,
+    backgroundSize: bgSize,
+    backgroundPosition: 'center',
+    backgroundRepeat: 'no-repeat',
+    WebkitBackgroundClip: 'text',
+    WebkitTextFillColor: 'transparent',
+    backgroundClip: 'text',
+    color: 'transparent'
+  } : {
+    color: textColor
+  };
+
+  return (
+    <div className="mask-text-wrapper" style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', position: 'relative', overflow: 'hidden' }}>
+      <span
+        style={{
+          ...font,
+          ...maskStyles,
+          display: 'inline-block',
+          lineHeight: font.lineHeight || 1.1,
+          fontSize: font.fontSize || 'inherit',
+          fontWeight: font.fontWeight || 'inherit',
+          fontStyle: font.fontStyle || 'inherit',
+          textAlign: font.textAlign || 'center'
+        }}
+        aria-label={text}
+      >
+        {text}
+      </span>
+    </div>
+  );
+}
+
 function Hero({ setView }) {
   return (
     <section className="hero">
@@ -363,7 +407,18 @@ function Hero({ setView }) {
           Smart Mood-Adaptive React Application
         </motion.p>
         <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
-          MoodScape
+          <ImageMaskText 
+            text="MoodScape"
+            image={{ src: maskImage }}
+            imageFit="cover"
+            font={{
+              fontSize: 'inherit',
+              fontWeight: 'inherit',
+              lineHeight: 'inherit',
+              letterSpacing: 'inherit',
+              fontFamily: 'inherit'
+            }}
+          />
         </motion.h1>
         <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="hero-text">
           A responsive emotional workspace that transforms theme, motion, assistant guidance, analytics, and focus tools around the user’s current state.
