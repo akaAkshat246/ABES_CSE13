@@ -2261,7 +2261,7 @@ function AppleHelloLoader({ onComplete }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
-    }, 3900);
+    }, 5800); // Increased timeout to capture the slower writing speed + a premium final buffer
     return () => clearTimeout(timer);
   }, [onComplete]);
 
@@ -2285,7 +2285,7 @@ function AppleHelloLoader({ onComplete }) {
       <motion.div
         initial={{ opacity: 0, scale: 0.8 }}
         animate={{ opacity: [0.12, 0.28, 0.12], scale: [0.9, 1.1, 0.9] }}
-        transition={{ duration: 3.5, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut' }}
         style={{
           position: 'absolute',
           width: '60vw',
@@ -2314,9 +2314,9 @@ function AppleHelloLoader({ onComplete }) {
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{
-              duration: 0.8,
+              duration: 1.3, // Slower drawing speed for the letter "h" (originally 0.8s)
               ease: 'easeInOut',
-              opacity: { duration: 0.4 }
+              opacity: { duration: 0.6 }
             }}
           />
           <motion.path
@@ -2325,10 +2325,10 @@ function AppleHelloLoader({ onComplete }) {
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{
-              duration: 2.8,
+              duration: 4.2, // Slower drawing speed for "ello" loop (originally 2.8s)
               ease: 'easeInOut',
-              delay: 0.7,
-              opacity: { duration: 0.7, delay: 0.7 }
+              delay: 1.2, // Adjusted delay to maintain smooth stroke continuity (originally 0.7s)
+              opacity: { duration: 0.9, delay: 1.2 }
             }}
           />
         </motion.svg>
