@@ -322,11 +322,11 @@ const toWords = (value) =>
     .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
 
 const hueRanges = {
-  happy: [18, 345],
-  calm: [145, 188],
-  focused: [168, 218],
-  stressed: [232, 292],
-  angry: [342, 12]
+  happy: [330, 30],      // Dopamine Cyber Pink to Vibrant Sunrise Orange
+  calm: [245, 295],       // Y2K Digital Lavender & Healing Periwinkle Lilac
+  focused: [80, 145],     // High-Performance Cyber Lime & Techno Matrix Green
+  stressed: [285, 335],   // Bubblegum Magenta, Velvet Purple, and Acid Indigo
+  angry: [345, 20]        // Abyssal Acid Crimson & High-Visibility Cyber Orange
 };
 
 const hashText = (text) => {
