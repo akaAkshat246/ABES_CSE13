@@ -2,7 +2,7 @@ import React, { Suspense, createContext, useContext, useEffect, useMemo, useRef,
 import { createRoot } from 'react-dom/client';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, OrbitControls, Stars } from '@react-three/drei';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import {
   Activity,
   BarChart3,
@@ -50,10 +50,10 @@ const MOODS = {
     icon: Sun,
     energy: 88,
     stress: 18,
-    gradient: 'linear-gradient(135deg, #FF9A3C 0%, #FFD93D 50%, #FFEAA7 100%)',
-    accent: '#FF9A3C',
-    ink: '#241400',
-    sky: '#FFEAA7',
+    gradient: 'linear-gradient(135deg, #FF5E62 0%, #FF9966 50%, #FFD97D 100%)',
+    accent: '#FF7E5F',
+    ink: '#2C0F00',
+    sky: '#FFF0E5',
     assistant: 'Your energy is bright. Try a quick creative sprint while momentum is high.',
     activity: 'Creative sprint',
     environment: 'Sunlit floating islands'
@@ -63,10 +63,10 @@ const MOODS = {
     icon: Moon,
     energy: 48,
     stress: 12,
-    gradient: 'linear-gradient(135deg, #36C5F0 0%, #43E6C5 50%, #A8EDDA 100%)',
-    accent: '#43E6C5',
-    ink: '#001a14',
-    sky: '#A8EDDA',
+    gradient: 'linear-gradient(135deg, #3A6073 0%, #48C9B0 50%, #A2D9CE 100%)',
+    accent: '#48C9B0',
+    ink: '#0C2B24',
+    sky: '#EAFaf1',
     assistant: 'You seem steady. A reflective planning block would fit this rhythm.',
     activity: 'Reflective planning',
     environment: 'Soft ocean atmosphere'
@@ -76,10 +76,10 @@ const MOODS = {
     icon: Focus,
     energy: 72,
     stress: 26,
-    gradient: 'linear-gradient(135deg, #5C6BF5 0%, #7B8CFF 50%, #00D4FF 100%)',
-    accent: '#00D4FF',
-    ink: '#020617',
-    sky: '#e6f7ff',
+    gradient: 'linear-gradient(135deg, #6a11cb 0%, #2575fc 60%, #00f2fe 100%)',
+    accent: '#00f2fe',
+    ink: '#0D1B2A',
+    sky: '#E3F2FD',
     assistant: 'Distractions are low. Start a 25 minute deep work session.',
     activity: 'Deep work',
     environment: 'Minimal orbital station'
@@ -89,10 +89,10 @@ const MOODS = {
     icon: Brain,
     energy: 42,
     stress: 78,
-    gradient: 'linear-gradient(135deg, #A855F7 0%, #E8703A 50%, #F5A623 100%)',
-    accent: '#A855F7',
-    ink: '#1d002e',
-    sky: '#fbf3ff',
+    gradient: 'linear-gradient(135deg, #4568DC 0%, #B06AB3 100%)',
+    accent: '#B06AB3',
+    ink: '#1F1A3A',
+    sky: '#F5F3FF',
     assistant: 'Pressure is showing. Breathe, list one next action, then enter focus mode.',
     activity: 'Reset ritual',
     environment: 'Gentle storm field'
@@ -102,10 +102,10 @@ const MOODS = {
     icon: Flame,
     energy: 91,
     stress: 68,
-    gradient: 'linear-gradient(135deg, #C0392B 0%, #FF4C4C 50%, #FF6B35 100%)',
-    accent: '#FF4C4C',
-    ink: '#220000',
-    sky: '#ffebe6',
+    gradient: 'linear-gradient(135deg, #8A2387 0%, #E94057 50%, #F27121 100%)',
+    accent: '#E94057',
+    ink: '#3B0B14',
+    sky: '#FFF0F2',
     assistant: 'High intensity detected. Channel it into a timed power task, then cool down.',
     activity: 'Power task',
     environment: 'Neon pulse city'
@@ -222,6 +222,78 @@ function MoodScene() {
   );
 }
 
+function Dock({ children, className = '' }) {
+  const mouseX = useMotionValue(Infinity);
+
+  return (
+    <motion.div
+      onMouseMove={(e) => mouseX.set(e.clientX)}
+      onMouseLeave={() => mouseX.set(Infinity)}
+      className={`dock ${className}`}
+    >
+      {React.Children.map(children, (child) => {
+        if (React.isValidElement(child)) {
+          return React.cloneElement(child, { mouseX });
+        }
+        return child;
+      })}
+    </motion.div>
+  );
+}
+
+function DockItem({ children, mouseX, onClick, active, label, highlighted }) {
+  const ref = useRef(null);
+
+  const distance = useTransform(mouseX, (val) => {
+    if (val === Infinity || !ref.current) return Infinity;
+    const bounds = ref.current.getBoundingClientRect();
+    return val - bounds.x - bounds.width / 2;
+  });
+
+  const widthTransform = useTransform(distance, [-150, 0, 150], [42, 64, 42]);
+  const heightTransform = useTransform(distance, [-150, 0, 150], [42, 64, 42]);
+
+  const width = useSpring(widthTransform, { mass: 0.1, stiffness: 220, damping: 18 });
+  const height = useSpring(heightTransform, { mass: 0.1, stiffness: 220, damping: 18 });
+
+  const [hovered, setHovered] = useState(false);
+
+  return (
+    <motion.button
+      ref={ref}
+      style={{ width, height }}
+      onClick={onClick}
+      className={`dock-item ${active ? 'active' : ''} ${highlighted ? 'highlighted' : ''}`}
+      onMouseEnter={() => setHovered(true)}
+      onMouseLeave={() => setHovered(false)}
+      type="button"
+      aria-label={label}
+    >
+      <span className="dock-icon">{children}</span>
+      <AnimatePresence>
+        {hovered && (
+          <motion.span
+            initial={{ opacity: 0, y: -6, scale: 0.9 }}
+            animate={{ opacity: 1, y: -12, scale: 1 }}
+            exit={{ opacity: 0, y: -6, scale: 0.9 }}
+            transition={{ duration: 0.12 }}
+            className="dock-tooltip"
+          >
+            {label}
+          </motion.span>
+        )}
+      </AnimatePresence>
+      {active && (
+        <motion.span
+          layoutId="dock-active-indicator"
+          className="dock-active-dot"
+          transition={{ type: 'spring', stiffness: 350, damping: 25 }}
+        />
+      )}
+    </motion.button>
+  );
+}
+
 function Nav({ view, setView, onOpenScan, themeMode, toggleTheme }) {
   const items = [
     ['home', HomeIcon, 'Home'],
@@ -235,52 +307,32 @@ function Nav({ view, setView, onOpenScan, themeMode, toggleTheme }) {
         <Sparkles size={18} />
         <span>MoodScape</span>
       </button>
-      <div className="nav-actions">
-        <button
-          className="ghost-btn scan-nav-btn animate-pulse-border"
-          type="button"
-          onClick={onOpenScan}
-          style={{
-            minHeight: '38px',
-            padding: '0 12px',
-            fontSize: '0.85rem',
-            border: '1px solid color-mix(in srgb, var(--mood-accent) 40%, transparent)',
-            background: 'color-mix(in srgb, var(--mood-accent) 8%, transparent)',
-            color: 'var(--text-accent)',
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '6px'
-          }}
-        >
-          <Brain size={16} />
-          <span>Scan Mood</span>
-        </button>
+      <Dock>
         {items.map(([id, Icon, label]) => (
-          <button
+          <DockItem
             key={id}
-            className={view === id ? 'icon-btn active' : 'icon-btn'}
-            type="button"
-            title={label}
-            aria-label={label}
             onClick={() => setView(id)}
+            active={view === id}
+            label={label}
           >
             <Icon size={18} />
-          </button>
+          </DockItem>
         ))}
-        <button
-          className="icon-btn theme-toggle-btn"
-          type="button"
+        <div className="dock-divider" />
+        <DockItem
+          onClick={onOpenScan}
+          label="Scan Mood"
+          highlighted={true}
+        >
+          <Brain size={18} />
+        </DockItem>
+        <DockItem
           onClick={toggleTheme}
-          title={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-          aria-label="Toggle theme mode"
-          style={{
-            marginLeft: '4px',
-            border: '1px solid var(--panel-border)'
-          }}
+          label={themeMode === 'dark' ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
         >
           {themeMode === 'dark' ? <Sun size={18} /> : <Moon size={18} />}
-        </button>
-      </div>
+        </DockItem>
+      </Dock>
     </nav>
   );
 }

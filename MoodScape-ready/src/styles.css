@@ -2296,3 +2296,189 @@ input {
   }
 }
 
+/* ==========================================================================
+   Premium Interactive Navigation Dock Styles
+   ========================================================================== */
+.dock {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 8px;
+  padding: 6px 12px;
+  background: rgba(10, 15, 30, 0.45);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  transition: background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 58px;
+  align-self: center;
+  position: relative;
+  will-change: transform, width, height;
+}
+
+:root.light-mode .dock {
+  background: rgba(255, 255, 255, 0.45);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  box-shadow: 0 8px 32px 0 rgba(15, 23, 42, 0.06);
+}
+
+.dock-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.04);
+  color: var(--text-app);
+  padding: 0;
+  cursor: pointer;
+  outline: none;
+  transition: background-color 0.25s ease, color 0.25s ease;
+  will-change: width, height, transform;
+}
+
+:root.light-mode .dock-item {
+  background: rgba(15, 23, 42, 0.03);
+}
+
+.dock-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: var(--text-accent);
+}
+
+:root.light-mode .dock-item:hover {
+  background: rgba(15, 23, 42, 0.08);
+}
+
+.dock-item.active {
+  background: var(--input-bg);
+  color: var(--text-accent);
+}
+
+.dock-item.highlighted {
+  border: 1.5px solid color-mix(in srgb, var(--mood-accent) 45%, transparent);
+  background: color-mix(in srgb, var(--mood-accent) 8%, transparent);
+}
+
+.dock-item.highlighted:hover {
+  border-color: var(--mood-accent);
+  background: color-mix(in srgb, var(--mood-accent) 15%, transparent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--mood-accent) 25%, transparent);
+}
+
+.dock-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.dock-icon svg {
+  width: 48%;
+  height: 48%;
+  transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.dock-item:hover .dock-icon svg {
+  transform: scale(1.12);
+}
+
+.dock-tooltip {
+  position: absolute;
+  top: -42px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 5px 10px;
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 700;
+  border-radius: 8px;
+  white-space: nowrap;
+  pointer-events: none;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  z-index: 100;
+}
+
+:root.light-mode .dock-tooltip {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(15, 23, 42, 0.08);
+  color: #0f172a;
+  box-shadow: 0 10px 25px rgba(15, 23, 42, 0.08);
+}
+
+.dock-active-dot {
+  position: absolute;
+  bottom: 4px;
+  width: 4.5px;
+  height: 4.5px;
+  border-radius: 50%;
+  background: var(--mood-accent);
+  box-shadow: 0 0 8px var(--mood-accent);
+}
+
+.dock-divider {
+  width: 1px;
+  height: 24px;
+  background: var(--panel-border);
+  margin: 0 4px;
+  align-self: center;
+}
+
+/* Update Nav container to layout dock cleanly */
+.nav {
+  padding: 6px 16px !important;
+  min-height: 70px;
+  align-items: center !important;
+}
+
+/* Desktop navbar positioning for brand and Dock */
+.nav .brand {
+  padding: 0;
+  font-size: 1.15rem;
+  letter-spacing: -0.5px;
+}
+
+/* Responsive & Mobile Constraints */
+@media (max-width: 920px) {
+  .nav {
+    flex-direction: column !important;
+    gap: 12px !important;
+    padding: 12px 16px !important;
+  }
+}
+
+@media (max-width: 560px) {
+  .dock {
+    height: 52px !important;
+    gap: 6px !important;
+    padding: 4px 10px !important;
+    border-radius: 16px !important;
+  }
+
+  /* Lock magnification to clean dimensions on mobile/touch screens to prevent wrap/breakage */
+  .dock-item {
+    width: 38px !important;
+    height: 38px !important;
+  }
+
+  .dock-divider {
+    height: 18px !important;
+    margin: 0 2px !important;
+  }
+
+  .dock-active-dot {
+    bottom: 3px !important;
+    width: 3.5px !important;
+    height: 3.5px !important;
+  }
+}
+

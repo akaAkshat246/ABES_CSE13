@@ -322,11 +322,11 @@ const toWords = (value) =>
     .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
 
 const hueRanges = {
-  happy: [25, 55],        // Mapped to Orange (#FF9A3C) and Yellow (#FFD93D)
-  calm: [165, 195],       // Mapped to Mint (#43E6C5) and Cyan-Blue (#36C5F0)
-  focused: [190, 235],     // Mapped to Indigo (#5C6BF5), Periwinkle (#7B8CFF), & Cyber (#00D4FF)
-  stressed: [260, 285],   // Mapped to Royal Purple (#A855F7) and Sunset Gold accents
-  angry: [355, 20]        // Mapped to Red (#FF4C4C) and Warm Orange (#FF6B35)
+  happy: [15, 45],        // Mapped to Sunset Gold and Warm Coral Rose (gorgeous warm ranges)
+  calm: [150, 185],       // Mapped to Sea Glass Sage, Mint Jade, and Soft Aquamarine
+  focused: [205, 230],     // Mapped to Deep Royal Sapphire, Cyber Cobalt, and Amethyst Blue
+  stressed: [255, 290],   // Mapped to Cosmic Lavender, Twilight Velvet, and Deep Plum Orchid
+  angry: [340, 10]        // Mapped to Rose Burgundy, Magma Coral, and Velvet Fuchsia
 };
 
 const hashText = (text) => {
@@ -342,20 +342,21 @@ const colorFromHash = (mood, text) => {
   const [start, end] = hueRanges[mood] || hueRanges.calm;
   const range = start > end ? 360 - start + end : end - start;
   const hue = (start + (hash % Math.max(1, range))) % 360;
-  const hueB = (hue + 28 + ((hash >> 8) % 42)) % 360;
-  const hueC = (hue + 312 - ((hash >> 16) % 36)) % 360;
-  const saturation = 68 + (hash % 18);
-  const accentLightness = 54 + ((hash >> 4) % 12);
-  const skyLightness = mood === 'focused' || mood === 'angry' ? 15 + ((hash >> 12) % 9) : 72 + ((hash >> 12) % 12);
+  const hueB = (hue + 20 + ((hash >> 8) % 25)) % 360;
+  const hueC = (hue + 340 - ((hash >> 16) % 20)) % 360;
+  const saturation = 70 + (hash % 15);
+  const accentLightness = 52 + ((hash >> 4) % 10);
+  const skyLightness = mood === 'focused' || mood === 'angry' ? 14 + ((hash >> 12) % 6) : 93 + ((hash >> 12) % 5);
+  const skySaturation = 25 + (hash % 15);
 
   return {
     accent: `hsl(${hue} ${saturation}% ${accentLightness}%)`,
-    accentSoft: `hsl(${hueB} ${Math.max(50, saturation - 8)}% ${Math.min(82, accentLightness + 10)}%)`,
-    accentDeep: `hsl(${hueC} ${Math.min(90, saturation + 4)}% ${Math.max(18, accentLightness - 26)}%)`,
-    gradient: `linear-gradient(135deg, hsl(${hueC} ${saturation}% 18%) 0%, hsl(${hue} ${saturation}% ${accentLightness}%) 48%, hsl(${hueB} ${saturation}% 62%) 100%)`,
-    ink: skyLightness > 55 ? 'hsl(204 40% 9%)' : 'hsl(190 65% 94%)',
-    sky: `hsl(${hueB} ${Math.max(42, saturation - 14)}% ${skyLightness}%)`,
-    colorName: `shade ${hue}-${saturation}-${accentLightness}`
+    accentSoft: `hsl(${hueB} ${Math.max(50, saturation - 10)}% ${Math.min(78, accentLightness + 8)}%)`,
+    accentDeep: `hsl(${hueC} ${Math.min(90, saturation + 6)}% ${Math.max(16, accentLightness - 22)}%)`,
+    gradient: `linear-gradient(135deg, hsl(${hueC} ${saturation}% 10%) 0%, hsl(${hue} ${saturation}% ${accentLightness}%) 50%, hsl(${hueB} ${saturation}% 60%) 100%)`,
+    ink: skyLightness > 50 ? `hsl(${hue} 70% 8%)` : `hsl(${hue} 40% 95%)`,
+    sky: `hsl(${hueB} ${skySaturation}% ${skyLightness}%)`,
+    colorName: `aesthetic ${hue}-${saturation}-${accentLightness}`
   };
 };
 
