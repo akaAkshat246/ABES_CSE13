@@ -244,15 +244,15 @@ function Nav({ view, setView, onOpenScan, themeMode, toggleTheme }) {
             minHeight: '38px',
             padding: '0 12px',
             fontSize: '0.85rem',
-            border: '1px solid rgba(45, 212, 191, 0.4)',
-            background: 'rgba(45, 212, 191, 0.08)',
-            color: '#fff',
+            border: '1px solid color-mix(in srgb, var(--mood-accent) 40%, transparent)',
+            background: 'color-mix(in srgb, var(--mood-accent) 8%, transparent)',
+            color: 'var(--text-accent)',
             display: 'inline-flex',
             alignItems: 'center',
             gap: '6px'
           }}
         >
-          <Brain size={16} style={{ color: 'var(--mood-accent)' }} />
+          <Brain size={16} />
           <span>Scan Mood</span>
         </button>
         {items.map(([id, Icon, label]) => (
@@ -2343,7 +2343,7 @@ function App() {
   const [view, setView] = useState('home');
   const [cinemaOpen, setCinemaOpen] = useState(false);
   const [scanOpen, setScanOpen] = useState(false);
-  const [themeMode, setThemeMode] = useState('dark');
+  const [themeMode, setThemeMode] = useState('light');
 
   useEffect(() => {
     if (themeMode === 'light') {
