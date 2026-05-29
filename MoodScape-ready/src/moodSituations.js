@@ -322,11 +322,11 @@ const toWords = (value) =>
     .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
 
 const hueRanges = {
-  happy: [15, 45],        // Mapped to Sunset Gold and Warm Coral Rose (gorgeous warm ranges)
-  calm: [150, 185],       // Mapped to Sea Glass Sage, Mint Jade, and Soft Aquamarine
-  focused: [205, 230],     // Mapped to Deep Royal Sapphire, Cyber Cobalt, and Amethyst Blue
-  stressed: [255, 290],   // Mapped to Cosmic Lavender, Twilight Velvet, and Deep Plum Orchid
-  angry: [340, 10]        // Mapped to Rose Burgundy, Magma Coral, and Velvet Fuchsia
+  happy: [20, 45],        // Mapped to Sunset Gold and Solar Apricot (doapmine stimulation)
+  calm: [135, 175],       // Mapped to Tranquil Eucalyptus and Sea Glass Jade (cortisol reduction)
+  focused: [205, 235],    // Mapped to Midnight Sapphire and Cyber Cobalt Blue (cognitive stamina)
+  stressed: [250, 285],   // Mapped to Cosmic Purple and Dusty Lavender (soothing decompression)
+  angry: [345, 15]        // Mapped to Magma Crimson and Molten Amber Gold (cathartic grounding)
 };
 
 const hashText = (text) => {
