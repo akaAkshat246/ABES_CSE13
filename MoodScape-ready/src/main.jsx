@@ -131,8 +131,8 @@ function useMood() {
 }
 
 function MoodProvider({ children }) {
-  const [mood, setMood] = useState('focused');
-  const [journal, setJournal] = useState('I want to focus but I feel pressure from exams.');
+  const [mood, setMood] = useState('happy');
+  const [journal, setJournal] = useState('Today is a beautiful day, full of wins and celebration!');
   const [scanResult, setScanResult] = useState(() => scanMoodSituation(journal));
   const theme = useMemo(
     () => ({
@@ -1979,14 +1979,108 @@ function MoviePoster({ movie, className = 'movie-banner' }) {
   );
 }
 
+function LoadingSpokesBounce({
+  size = 180,
+  segments = 24,
+  duration = 2400,
+  activeColor = "var(--mood-accent)",
+  inactiveColor = "var(--panel-border)",
+  barLength = 16,
+  barWidth = 6,
+  onComplete
+}) {
+  const [progress, setProgress] = useState(0);
+  const [activated, setActivated] = useState(() => Array(segments).fill(false));
+
+  useEffect(() => {
+    let current = 0;
+    const stepMs = Math.max(10, Math.floor(duration / 100));
+    const id = setInterval(() => {
+      current = Math.min(100, current + 1);
+      setProgress(current);
+      const activeSpokes = Math.round(current / 100 * segments);
+      setActivated(prev => prev.map((v, i) => i < activeSpokes ? true : v));
+      if (current >= 100) {
+        clearInterval(id);
+        if (onComplete) onComplete();
+      }
+    }, stepMs);
+    return () => clearInterval(id);
+  }, [duration, segments, onComplete]);
+
+  const cx = size / 2;
+  const cy = size / 2;
+  const outerR = size / 2 - 12;
+  const angleStep = 360 / segments;
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', width: '100%', padding: '24px 0' }}>
+      <div style={{ width: `${size}px`, height: `${size}px`, position: 'relative', margin: '0 auto' }}>
+        <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`}>
+          {Array.from({ length: segments }).map((_, i) => {
+            const angle = -0 + i * angleStep;
+            const isActive = activated[i];
+            return (
+              <g transform={`rotate(${angle} ${cx} ${cy})`} key={i}>
+                <motion.rect
+                  x={cx - barWidth / 2}
+                  y={cy - outerR}
+                  width={barWidth}
+                  height={barLength}
+                  rx={barWidth / 2}
+                  ry={barWidth / 2}
+                  style={{ transformOrigin: "50% 100%" }}
+                  initial={{ fill: inactiveColor, scaleY: 1 }}
+                  animate={isActive ? { fill: activeColor, scaleY: [1, 1.8, 1] } : { fill: inactiveColor, scaleY: 1 }}
+                  transition={{ duration: .4, ease: "easeOut" }}
+                />
+              </g>
+            );
+          })}
+        </svg>
+        <div style={{
+          position: "absolute",
+          inset: 0,
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: Math.round(size * 0.24),
+          fontFamily: "'Bricolage Grotesque', sans-serif",
+          fontWeight: 800,
+          color: 'var(--text-accent)',
+          lineHeight: 1,
+          userSelect: "none"
+        }}>
+          {progress}%
+        </div>
+      </div>
+      <span className="panel-label" style={{ marginTop: '20px', letterSpacing: '1px', opacity: 0.85, textTransform: 'uppercase', fontSize: '0.72rem' }}>
+        Analyzing Journal Signals...
+      </span>
+    </div>
+  );
+}
+
 function MoodScanModal({ isOpen, onClose }) {
   const { theme, journal, setJournal, analyzeJournal } = useMood();
+  const [isScanning, setIsScanning] = useState(false);
+
   const usePlaceholder = (text) => {
     setJournal(`I want a ${text} kind of day with less pressure and more room to breathe.`);
   };
 
   const handleAnalyze = () => {
+    setIsScanning(true);
+  };
+
+  const handleScanComplete = () => {
     analyzeJournal();
+    setIsScanning(false);
+    onClose();
+  };
+
+  const handleClose = () => {
+    setIsScanning(false);
     onClose();
   };
 
@@ -1998,7 +2092,7 @@ function MoodScanModal({ isOpen, onClose }) {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          onClick={onClose}
+          onClick={handleClose}
           style={{ zIndex: 101 }}
         >
           <motion.div
@@ -2016,62 +2110,68 @@ function MoodScanModal({ isOpen, onClose }) {
                 <h2>Scan your mood</h2>
                 <p className="modal-sub">Tell us how you are feeling, and watch MoodScape dynamically adapt.</p>
               </div>
-              <button className="close-btn" onClick={onClose} aria-label="Close modal">
+              <button className="close-btn" onClick={handleClose} aria-label="Close modal">
                 &times;
               </button>
             </div>
             
             <div className="analysis-panel-content">
-              <div style={{ marginBottom: '14px' }}>
-                <span className="panel-label">Active Environment</span>
-                <strong style={{ display: 'block', fontSize: '1.1rem', marginTop: '4px', color: 'var(--text-accent)' }}>
-                  {theme.environment}
-                </strong>
-              </div>
-              <textarea
-                value={journal}
-                onChange={(event) => setJournal(event.target.value)}
-                placeholder="Write down a sentence about your day, pressure, study, or goals..."
-                aria-label="Mood journal input"
-                className="scan-textarea"
-                style={{
-                  minHeight: '110px',
-                  padding: '12px',
-                  border: '1px solid var(--panel-border)',
-                  background: 'var(--input-bg)',
-                  color: 'var(--text-app)',
-                  borderRadius: '8px'
-                }}
-              />
-              <div className="scan-placeholders" style={{ marginTop: '10px' }}>
-                {CALM_PLACEHOLDERS.map((item) => (
-                  <button
-                    key={item}
-                    type="button"
-                    onClick={() => usePlaceholder(item)}
+              {isScanning ? (
+                <LoadingSpokesBounce onComplete={handleScanComplete} />
+              ) : (
+                <>
+                  <div style={{ marginBottom: '14px' }}>
+                    <span className="panel-label">Active Environment</span>
+                    <strong style={{ display: 'block', fontSize: '1.1rem', marginTop: '4px', color: 'var(--text-accent)' }}>
+                      {theme.environment}
+                    </strong>
+                  </div>
+                  <textarea
+                    value={journal}
+                    onChange={(event) => setJournal(event.target.value)}
+                    placeholder="Write down a sentence about your day, pressure, study, or goals..."
+                    aria-label="Mood journal input"
+                    className="scan-textarea"
                     style={{
-                      border: '1px solid color-mix(in srgb, var(--mood-accent) 24%, transparent)',
-                      background: 'color-mix(in srgb, var(--mood-accent) 6%, transparent)',
-                      color: 'var(--text-accent)',
-                      padding: '4px 10px',
-                      fontSize: '0.76rem',
-                      borderRadius: '8px',
-                      cursor: 'pointer'
+                      minHeight: '110px',
+                      padding: '12px',
+                      border: '1px solid var(--panel-border)',
+                      background: 'var(--input-bg)',
+                      color: 'var(--text-app)',
+                      borderRadius: '8px'
                     }}
+                  />
+                  <div className="scan-placeholders" style={{ marginTop: '10px' }}>
+                    {CALM_PLACEHOLDERS.map((item) => (
+                      <button
+                        key={item}
+                        type="button"
+                        onClick={() => usePlaceholder(item)}
+                        style={{
+                          border: '1px solid color-mix(in srgb, var(--mood-accent) 24%, transparent)',
+                          background: 'color-mix(in srgb, var(--mood-accent) 6%, transparent)',
+                          color: 'var(--text-accent)',
+                          padding: '4px 10px',
+                          fontSize: '0.76rem',
+                          borderRadius: '8px',
+                          cursor: 'pointer'
+                        }}
+                      >
+                        {item}
+                      </button>
+                    ))}
+                  </div>
+                  <button
+                    type="button"
+                    className="primary-btn full"
+                    onClick={handleAnalyze}
+                    style={{ marginTop: '20px', minHeight: '46px', border: 0 }}
                   >
-                    {item}
+                    <Brain size={18} />
+                    Analyze mood & Adapt environment
                   </button>
-                ))}
-              </div>
-              <button
-                type="button"
-                className="primary-btn full"
-                onClick={handleAnalyze}
-                style={{ marginTop: '20px', minHeight: '46px', border: 0 }}
-              >
-                <Brain size={18} />
-                Analyze mood & Adapt environment
-              </button>
+                </>
+              )}
             </div>
           </motion.div>
         </motion.div>
@@ -2408,7 +2508,6 @@ function SiteFooter() {
       </div>
       <div className="footer-copyright">
         <span>© {new Date().getFullYear()} MoodScape by Akshat Vats. All rights reserved.</span>
-        <span>Made with ❤️ in India</span>
       </div>
     </footer>
   );
