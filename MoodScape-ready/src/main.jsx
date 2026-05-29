@@ -316,16 +316,6 @@ function Hero({ setView }) {
         <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="hero-text">
           A responsive emotional workspace that transforms theme, motion, assistant guidance, analytics, and focus tools around the user’s current state.
         </motion.p>
-        <div className="hero-actions">
-          <button type="button" className="primary-btn" onClick={() => setView('planning')}>
-            <Zap size={18} />
-            Reflective planning
-          </button>
-          <button type="button" className="ghost-btn" onClick={() => setView('focus')}>
-            <TimerReset size={18} />
-            Start focus
-          </button>
-        </div>
       </div>
     </section>
   );

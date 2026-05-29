@@ -172,6 +172,8 @@ button {
   position: relative;
   z-index: 2;
   max-width: 680px;
+  margin: 0 auto;
+  text-align: center;
   padding: clamp(24px, 5vw, 54px) 0;
   text-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
 }
@@ -214,6 +216,7 @@ h3 {
 
 .hero-text {
   width: min(540px, 100%);
+  margin: 0 auto;
   color: color-mix(in srgb, var(--text-app) 82%, transparent);
   font-size: 1.12rem;
   line-height: 1.65;
