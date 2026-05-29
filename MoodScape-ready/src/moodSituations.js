@@ -322,11 +322,11 @@ const toWords = (value) =>
     .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
 
 const hueRanges = {
-  happy: [330, 30],      // Dopamine Cyber Pink to Vibrant Sunrise Orange
-  calm: [245, 295],       // Y2K Digital Lavender & Healing Periwinkle Lilac
-  focused: [80, 145],     // High-Performance Cyber Lime & Techno Matrix Green
-  stressed: [285, 335],   // Bubblegum Magenta, Velvet Purple, and Acid Indigo
-  angry: [345, 20]        // Abyssal Acid Crimson & High-Visibility Cyber Orange
+  happy: [25, 55],        // Mapped to Orange (#FF9A3C) and Yellow (#FFD93D)
+  calm: [165, 195],       // Mapped to Mint (#43E6C5) and Cyan-Blue (#36C5F0)
+  focused: [190, 235],     // Mapped to Indigo (#5C6BF5), Periwinkle (#7B8CFF), & Cyber (#00D4FF)
+  stressed: [260, 285],   // Mapped to Royal Purple (#A855F7) and Sunset Gold accents
+  angry: [355, 20]        // Mapped to Red (#FF4C4C) and Warm Orange (#FF6B35)
 };
 
 const hashText = (text) => {
