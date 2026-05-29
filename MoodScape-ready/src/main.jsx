@@ -308,7 +308,7 @@ function Hero({ setView }) {
       <MoodScene />
       <div className="hero-copy">
         <motion.p initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} className="eyebrow">
-          AI Powered Mood-Adaptive React Application
+          Smart Mood-Adaptive React Application
         </motion.p>
         <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
           MoodScape
@@ -1158,9 +1158,23 @@ function SpotifyWidget({ mood }) {
   return (
     <div className="spotify-widget-card">
       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '6px', marginBottom: '16px' }}>
-        <svg viewBox="0 0 24 24" width="24" height="24" fill="#1DB954" style={{ flexShrink: 0 }}>
-          <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.076-.336.135-.668.47-.744 3.856-.88 7.15-.506 9.82 1.13.295.18.387.565.207.86zm1.224-2.72c-.226.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.075-1.185-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.666-1.112 8.232-.57 11.34 1.343.367.227.487.708.26 1.074zm.106-2.833C14.484 8.788 8.825 8.6 5.587 9.584c-.5.15-1.025-.133-1.176-.632-.15-.5.133-1.025.632-1.176 3.722-1.13 9.953-.918 13.914 1.432.45.267.6.845.333 1.295-.267.45-.845.6-1.295.333z"/>
-        </svg>
+        <a 
+          href="https://www.spotify.com" 
+          target="_blank" 
+          rel="noopener noreferrer" 
+          style={{ 
+            display: 'inline-flex', 
+            transition: 'transform 0.2s ease', 
+            cursor: 'pointer' 
+          }}
+          onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.15)'}
+          onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          title="Open Spotify"
+        >
+          <svg viewBox="0 0 24 24" width="24" height="24" fill="#1DB954" style={{ flexShrink: 0 }}>
+            <path d="M12 2C6.477 2 2 6.477 2 12s4.477 10 10 10 10-4.477 10-10S17.523 2 12 2zm4.586 14.424c-.18.295-.565.387-.86.207-2.377-1.454-5.37-1.783-8.893-.982-.336.075-.668-.135-.744-.47-.076-.336.135-.668.47-.744 3.856-.88 7.15-.506 9.82 1.13.295.18.387.565.207.86zm1.224-2.72c-.226.367-.707.487-1.074.26-2.72-1.672-6.87-2.157-10.075-1.185-.413.125-.847-.107-.972-.52-.125-.413.107-.847.52-.972 3.666-1.112 8.232-.57 11.34 1.343.367.227.487.708.26 1.074zm.106-2.833C14.484 8.788 8.825 8.6 5.587 9.584c-.5.15-1.025-.133-1.176-.632-.15-.5.133-1.025.632-1.176 3.722-1.13 9.953-.918 13.914 1.432.45.267.6.845.333 1.295-.267.45-.845.6-1.295.333z"/>
+          </svg>
+        </a>
         <span className="panel-label" style={{ margin: 0 }}>Spotify Recommendation</span>
       </div>
 
@@ -1491,7 +1505,7 @@ function Home({ setView, onOpenCinema }) {
     {
       title: 'Scan Your Mood',
       icon: Brain,
-      copy: 'Write down a brief journal sentence or click a mood preset. Our AI engine scans your emotional signals and immediately transforms the entire site colors, soundscapes, and virtual space.',
+      copy: 'Write down a brief journal sentence or click a mood preset. Our smart engine scans your emotional signals and immediately transforms the entire site colors, soundscapes, and virtual space.',
       bullets: [
         'Advanced tone & sentiment interpretation',
         'Automatic HSL color palette mapping',
@@ -1867,7 +1881,7 @@ function MoodScanModal({ isOpen, onClose }) {
           >
             <div className="modal-head" style={{ marginBottom: '22px', paddingBottom: '16px' }}>
               <div>
-                <span className="panel-label">AI Emotional Scanner</span>
+                <span className="panel-label">Smart Emotional Scanner</span>
                 <h2>Scan your mood</h2>
                 <p className="modal-sub">Tell us how you are feeling, and watch MoodScape dynamically adapt.</p>
               </div>
