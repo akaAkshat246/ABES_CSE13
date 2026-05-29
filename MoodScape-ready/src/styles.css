@@ -817,6 +817,7 @@ input {
   max-width: 680px;
   width: 100%;
   margin: 0 auto;
+  padding-top: 28px;
 }
 
 .focus-panel {
