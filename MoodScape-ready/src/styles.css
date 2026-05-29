@@ -940,20 +940,38 @@ input {
 }
 
 .spotify-dropdown-menu {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: 0;
-  right: 0;
+  position: relative;
+  margin-top: 10px;
   background: var(--panel-bg);
   border: 1px solid var(--panel-border);
   border-radius: 8px;
   box-shadow: 0 12px 40px var(--panel-shadow);
   max-height: 240px;
   overflow-y: auto;
-  z-index: 100;
+  z-index: 10;
   backdrop-filter: blur(20px);
   padding: 6px;
   box-sizing: border-box;
+}
+
+.focus-scene-card {
+  width: 100%;
+  height: 240px;
+  border: 1px solid var(--panel-border);
+  border-radius: 8px;
+  background: var(--panel-bg);
+  box-shadow: 0 24px 90px var(--panel-shadow);
+  backdrop-filter: blur(18px);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.focus-scene-card .panel-label {
+  position: absolute;
+  top: 16px;
+  left: 16px;
+  z-index: 10;
 }
 
 
