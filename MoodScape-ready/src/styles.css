@@ -2265,69 +2265,31 @@ input {
 }
 
 /* ============================================================
-   Video-inside-Text Mask Effect  (vmt = video mask text)
+   Video-inside-Text Effect  (.vmt-clip-text)
 
-   Technique (canvas approach):
-     1. .vmt-wrap      → inline-block, position:relative, overflow:hidden
-     2. .vmt-canvas    → position:absolute, fills the wrapper, draws video frames
-     3. .vmt-ghost     → the real h1 text, rendered transparent — gives the
-                         wrapper its exact natural width × height so overflow:hidden
-                         clips canvas to precisely the glyph bounding box
-     4. .vmt-hidden-video → display:none, source for canvas drawImage()
-
-   Because the wrapper's overflow:hidden clips to the text's inline box,
-   the canvas video is visible ONLY where the text letters are.
-   No SVG, no hardcoded sizes. h1 sets every dimension automatically.
+   How it works:
+   - JS draws video frames onto an off-screen <canvas> every rAF tick
+   - Canvas frame → toDataURL → set as span.style.backgroundImage
+   - -webkit-background-clip:text reveals that background ONLY through glyphs
+   - Outside the letters is fully transparent → the 3D scene shows through
    ============================================================ */
+.vmt-clip-text {
+  /* Fallback gradient visible until the first video frame arrives */
+  background-image: linear-gradient(135deg, #FF5E62 0%, #FF9966 50%, #FFD97D 100%);
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
 
-/* Outer wrapper: inline so it hugs the text naturally */
-.vmt-wrap {
-  position: relative;
+  /* The magic: clip the background to the glyph shapes */
+  -webkit-background-clip: text !important;
+          background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  color: transparent !important;
+
+  /* Typography alignment — match the h1 exactly */
   display: inline-block;
   vertical-align: top;
-  /* Clip the canvas to the text bounding box */
-  overflow: hidden;
-  line-height: inherit;
-  /* Ensure the wrapper height matches the cap-height, not the full line-height.
-     With line-height:0.86 on h1, this makes the box as tall as the letters. */
-  border-radius: 0;
-}
-
-/* Ghost text: transparent placeholder that gives the wrapper its size.
-   Must inherit ALL h1 typography so dimensions are pixel-perfect. */
-.vmt-ghost {
-  display: block;
-  color: transparent !important;
-  -webkit-text-fill-color: transparent !important;
-  background: transparent !important;
   text-shadow: none !important;
-  user-select: none;
-  pointer-events: none;
-  white-space: nowrap;
-  font: inherit;
-  letter-spacing: inherit;
   line-height: inherit;
+  white-space: nowrap;
 }
-
-/* Canvas: absolutely covers the wrapper, behind the ghost text.
-   The wrapper's overflow:hidden clips it to the ghost text's box. */
-.vmt-canvas {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  display: block;
-  pointer-events: none;
-}
-
-/* The video is hidden — it only feeds canvas.drawImage() */
-.vmt-hidden-video {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  opacity: 0;
-  pointer-events: none;
-  visibility: hidden;
-}
-

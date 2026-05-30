@@ -352,83 +352,87 @@ function MoodSelector() {
 }
 
 function ImageMaskText({ text }) {
-  const videoRef = useRef(null);
+  const videoRef  = useRef(null);
   const canvasRef = useRef(null);
-  const rafRef = useRef(null);
+  const spanRef   = useRef(null);
+  const rafRef    = useRef(null);
 
   useEffect(() => {
-    const video = videoRef.current;
+    const video  = videoRef.current;
     const canvas = canvasRef.current;
-    if (!video || !canvas) return;
+    const span   = spanRef.current;
+    if (!video || !canvas || !span) return;
 
-    video.muted = true;
-    video.loop = true;
+    video.muted      = true;
+    video.loop       = true;
     video.playsInline = true;
 
     const ctx = canvas.getContext('2d');
-    let sized = false;
 
-    // Size canvas once — resetting width/height clears it and causes flicker
-    const sizeCanvas = () => {
-      const w = canvas.offsetWidth;
-      const h = canvas.offsetHeight;
-      if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
-        canvas.width = w;
-        canvas.height = h;
-        sized = true;
+    const tick = () => {
+      if (video.readyState >= 2) {
+        // Match canvas to the span's actual pixel size
+        const rect = span.getBoundingClientRect();
+        const w = Math.round(rect.width);
+        const h = Math.round(rect.height);
+
+        if (w > 0 && h > 0) {
+          // Only resize when dimensions change (avoids flicker)
+          if (canvas.width !== w || canvas.height !== h) {
+            canvas.width  = w;
+            canvas.height = h;
+          }
+          // Paint the current video frame, scaled to fill the text box
+          ctx.drawImage(video, 0, 0, w, h);
+          // Push the frame as a JPEG data-URL into the span's background.
+          // -webkit-background-clip:text then shows it only through the glyphs.
+          span.style.backgroundImage = `url(${canvas.toDataURL('image/jpeg', 0.88)})`;
+        }
       }
+      rafRef.current = requestAnimationFrame(tick);
     };
 
-    // Re-size on layout changes (e.g. window resize)
-    const ro = new ResizeObserver(sizeCanvas);
-    ro.observe(canvas);
-
-    const drawFrame = () => {
-      if (!sized) sizeCanvas();
-      if (sized && video.readyState >= 2) {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      }
-      rafRef.current = requestAnimationFrame(drawFrame);
-    };
-
-    const startPlayback = () => {
-      sizeCanvas();
+    const start = () => {
       video.play().catch(() => {});
-      rafRef.current = requestAnimationFrame(drawFrame);
+      rafRef.current = requestAnimationFrame(tick);
     };
 
-    video.addEventListener('loadeddata', startPlayback, { once: true });
-    if (video.readyState >= 2) startPlayback();
+    video.addEventListener('loadeddata', start, { once: true });
+    if (video.readyState >= 2) start();
 
-    // Retry playback on first user interaction if autoplay is blocked
-    const retry = () => { video.play().catch(() => {}); };
+    // Retry on first tap/click if autoplay was blocked
+    const retry = () => video.play().catch(() => {});
     document.addEventListener('click', retry, { once: true });
 
     return () => {
       cancelAnimationFrame(rafRef.current);
-      ro.disconnect();
       document.removeEventListener('click', retry);
     };
   }, []);
 
   return (
-    <span className="vmt-wrap" aria-label={text}>
-      {/* Canvas behind the text — draws live video frames */}
-      <canvas ref={canvasRef} className="vmt-canvas" aria-hidden="true" />
-      {/* Transparent ghost text — reserves exact layout box, clips canvas */}
-      <span className="vmt-ghost" aria-hidden="true">{text}</span>
-      {/* Hidden video — source pixels for canvas.drawImage() */}
+    <>
+      {/* The text span — backgroundImage is updated live by the effect above.
+          -webkit-background-clip:text makes the video show ONLY inside letters. */}
+      <span ref={spanRef} className="vmt-clip-text">
+        {text}
+      </span>
+
+      {/* Off-screen canvas (never shown) used to stamp video frames */}
+      <canvas ref={canvasRef} style={{ display: 'none' }} />
+
+      {/* Hidden video — feeds canvas.drawImage() */}
       <video
         ref={videoRef}
         src={videoSrc}
-        className="vmt-hidden-video"
+        style={{ display: 'none' }}
         muted
         loop
         playsInline
         autoPlay
         preload="auto"
       />
-    </span>
+    </>
   );
 }
 
