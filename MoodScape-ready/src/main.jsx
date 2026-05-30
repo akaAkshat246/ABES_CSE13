@@ -4,7 +4,6 @@ import { Canvas, useFrame } from '@react-three/fiber';
 import { Float, MeshDistortMaterial, OrbitControls, Stars } from '@react-three/drei';
 import { motion, AnimatePresence, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import {
-  Activity,
   BarChart3,
   Bot,
   Brain,
@@ -16,16 +15,12 @@ import {
   Focus,
   Home as HomeIcon,
   Hourglass,
-  Instagram,
-  Linkedin,
-  MessageCircle,
   Moon,
   Plus,
   Minus,
   RefreshCcw,
   Sparkles,
   Sun,
-  TimerReset,
   Trash2,
   Zap
 } from 'lucide-react';
@@ -1655,7 +1650,6 @@ function TypewriterEffect(props) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [wordIndex, setWordIndex] = useState(0);
   const [charIndex, setCharIndex] = useState(0);
-  const [pause, setPause] = useState(false);
   const [showCursor, setShowCursor] = useState(true);
   const timeoutRef = useRef(null);
   const blinkRef = useRef(null);
@@ -1663,28 +1657,22 @@ function TypewriterEffect(props) {
 
   // Typing/Deleting Effect
   useEffect(() => {
-    if (pause) return;
     if (timeoutRef.current) clearTimeout(timeoutRef.current);
-    let delay = typingSpeed;
     if (!isDeleting && charIndex < currentWord.length) {
-      delay = typingSpeed;
       timeoutRef.current = window.setTimeout(() => {
         setDisplayed(currentWord.slice(0, charIndex + 1));
         setCharIndex(charIndex + 1);
-      }, delay);
+      }, typingSpeed);
     } else if (!isDeleting && charIndex === currentWord.length) {
-      // Pause at end of word
       timeoutRef.current = window.setTimeout(() => {
         setIsDeleting(true);
       }, pauseDuration);
     } else if (isDeleting && charIndex > 0) {
-      delay = deletingSpeed;
       timeoutRef.current = window.setTimeout(() => {
         setDisplayed(currentWord.slice(0, charIndex - 1));
         setCharIndex(charIndex - 1);
-      }, delay);
+      }, deletingSpeed);
     } else if (isDeleting && charIndex === 0) {
-      // Pause before next word
       timeoutRef.current = window.setTimeout(() => {
         setIsDeleting(false);
         setWordIndex((wordIndex + 1) % words.length);
@@ -1693,7 +1681,7 @@ function TypewriterEffect(props) {
     return () => {
       if (timeoutRef.current) clearTimeout(timeoutRef.current);
     };
-  }, [charIndex, isDeleting, pause, wordIndex, currentWord, typingSpeed, deletingSpeed, pauseDuration, words.length]);
+  }, [charIndex, isDeleting, wordIndex, currentWord, typingSpeed, deletingSpeed, pauseDuration, words.length]);
 
   // Reset charIndex when wordIndex changes
   useEffect(() => {
@@ -2156,7 +2144,7 @@ function LoadingSpokesBounce({
       <div style={{ width: `${size}px`, height: `${size}px`, position: 'relative', margin: '0 auto' }}>
         <svg width="100%" height="100%" viewBox={`0 0 ${size} ${size}`}>
           {Array.from({ length: segments }).map((_, i) => {
-            const angle = -0 + i * angleStep;
+            const angle = i * angleStep;
             const isActive = activated[i];
             return (
               <g transform={`rotate(${angle} ${cx} ${cy})`} key={i}>
@@ -2655,7 +2643,7 @@ function AppleHelloLoader({ onComplete }) {
   useEffect(() => {
     const timer = setTimeout(() => {
       onComplete();
-    }, 5800); // Increased timeout to capture the slower writing speed + a premium final buffer
+    }, 5800);
     return () => clearTimeout(timer);
   }, [onComplete]);
 
@@ -2708,7 +2696,7 @@ function AppleHelloLoader({ onComplete }) {
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{
-              duration: 1.3, // Slower drawing speed for the letter "h" (originally 0.8s)
+              duration: 1.3,
               ease: 'easeInOut',
               opacity: { duration: 0.6 }
             }}
@@ -2719,9 +2707,9 @@ function AppleHelloLoader({ onComplete }) {
             initial={{ pathLength: 0, opacity: 0 }}
             animate={{ pathLength: 1, opacity: 1 }}
             transition={{
-              duration: 4.2, // Slower drawing speed for "ello" loop (originally 2.8s)
+              duration: 4.2,
               ease: 'easeInOut',
-              delay: 1.2, // Adjusted delay to maintain smooth stroke continuity (originally 0.7s)
+              delay: 1.2,
               opacity: { duration: 0.9, delay: 1.2 }
             }}
           />
