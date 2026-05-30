@@ -2720,7 +2720,6 @@ function AppleHelloLoader({ onComplete }) {
     </motion.div>
   );
 }
-
 function App() {
   const { mood } = useMood();
   const [loading, setLoading] = useState(true);
@@ -2769,7 +2768,6 @@ function App() {
     </>
   );
 }
-
 createRoot(document.getElementById('root')).render(
   <MoodProvider>
     <App />
