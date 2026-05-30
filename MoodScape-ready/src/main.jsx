@@ -350,21 +350,11 @@ function MoodSelector() {
   );
 }
 
-function ImageMaskText({ text, font = {} }) {
+function ImageMaskText({ text }) {
   return (
     <span
       className="aesthetic-mask-text"
-      style={{
-        ...font,
-        '--text-mask-url': `url(${maskImageSrc})`,
-        fontSize: font.fontSize || 'inherit',
-        fontWeight: font.fontWeight || 'inherit',
-        lineHeight: font.lineHeight || 1.1,
-        letterSpacing: font.letterSpacing || 'inherit',
-        fontFamily: font.fontFamily || 'inherit',
-        textAlign: font.textAlign || 'center'
-      }}
-      aria-label={text}
+      style={{ '--text-mask-url': `url(${maskImageSrc})` }}
     >
       {text}
     </span>
@@ -380,16 +370,7 @@ function Hero({ setView }) {
           Smart Mood-Adaptive React Application
         </motion.p>
         <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
-          <ImageMaskText 
-            text="MoodScape"
-            font={{
-              fontSize: 'inherit',
-              fontWeight: 'inherit',
-              lineHeight: 'inherit',
-              letterSpacing: 'inherit',
-              fontFamily: 'inherit'
-            }}
-          />
+          <ImageMaskText text="MoodScape" />
         </motion.h1>
         <motion.p initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.15 }} className="hero-text">
           A responsive emotional workspace that transforms theme, motion, assistant guidance, analytics, and focus tools around the user’s current state.

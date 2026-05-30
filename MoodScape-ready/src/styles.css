@@ -199,6 +199,12 @@ button {
   text-shadow: 0 18px 50px rgba(0, 0, 0, 0.38);
 }
 
+/* h1 containing masked gradient text must have no shadow —
+   text-shadow renders on transparent glyphs and muddies the gradient */
+.hero-copy h1 {
+  text-shadow: none;
+}
+
 .eyebrow,
 .panel-label {
   display: block;
@@ -2245,14 +2251,21 @@ input {
 /* Premium Image Masked Text Styling */
 .aesthetic-mask-text {
   background-image: var(--text-mask-url, var(--mood-gradient));
-  background-size: cover;
+  /* 100% 100% stretches the image to fill the full text bounding box,
+     guaranteeing the entire colour range is always visible across the letters */
+  background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
   -webkit-background-clip: text !important;
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
+  /* inline-block + vertical-align: top eliminates the descender/baseline gap
+     that appears when an inline-block child lives inside a tight line-height h1 */
   display: inline-block;
-  outline: none;
+  vertical-align: top;
+  /* explicitly clear any inherited text-shadow — shadows still render on
+     transparent glyphs and will muddy the gradient fill if left in place */
+  text-shadow: none !important;
+  line-height: inherit;
 }
-
