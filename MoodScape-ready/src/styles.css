@@ -2264,15 +2264,7 @@ input {
   line-height: inherit;
 }
 
-/* ============================================================
-   Video-inside-Text Effect  (.vmt-clip-text)
 
-   How it works:
-   - JS draws video frames onto an off-screen <canvas> every rAF tick
-   - Canvas frame → toDataURL → set as span.style.backgroundImage
-   - -webkit-background-clip:text reveals that background ONLY through glyphs
-   - Outside the letters is fully transparent → the 3D scene shows through
-   ============================================================ */
 .vmt-clip-text {
   /* Fallback gradient visible until the first video frame arrives */
   background-image: linear-gradient(135deg, #FF5E62 0%, #FF9966 50%, #FFD97D 100%);
