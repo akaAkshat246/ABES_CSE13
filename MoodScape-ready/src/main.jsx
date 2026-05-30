@@ -353,84 +353,81 @@ function MoodSelector() {
 
 function ImageMaskText({ text }) {
   const videoRef = useRef(null);
+  const canvasRef = useRef(null);
+  const rafRef = useRef(null);
 
   useEffect(() => {
     const video = videoRef.current;
-    if (!video) return;
+    const canvas = canvasRef.current;
+    if (!video || !canvas) return;
+
     video.muted = true;
     video.loop = true;
     video.playsInline = true;
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
-        // Autoplay blocked — retry on first user interaction
-        const retry = () => {
-          video.play().catch(() => {});
-          document.removeEventListener('click', retry);
-        };
-        document.addEventListener('click', retry);
-      });
-    }
+
+    const ctx = canvas.getContext('2d');
+    let sized = false;
+
+    // Size canvas once — resetting width/height clears it and causes flicker
+    const sizeCanvas = () => {
+      const w = canvas.offsetWidth;
+      const h = canvas.offsetHeight;
+      if (w > 0 && h > 0 && (canvas.width !== w || canvas.height !== h)) {
+        canvas.width = w;
+        canvas.height = h;
+        sized = true;
+      }
+    };
+
+    // Re-size on layout changes (e.g. window resize)
+    const ro = new ResizeObserver(sizeCanvas);
+    ro.observe(canvas);
+
+    const drawFrame = () => {
+      if (!sized) sizeCanvas();
+      if (sized && video.readyState >= 2) {
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      }
+      rafRef.current = requestAnimationFrame(drawFrame);
+    };
+
+    const startPlayback = () => {
+      sizeCanvas();
+      video.play().catch(() => {});
+      rafRef.current = requestAnimationFrame(drawFrame);
+    };
+
+    video.addEventListener('loadeddata', startPlayback, { once: true });
+    if (video.readyState >= 2) startPlayback();
+
+    // Retry playback on first user interaction if autoplay is blocked
+    const retry = () => { video.play().catch(() => {}); };
+    document.addEventListener('click', retry, { once: true });
+
+    return () => {
+      cancelAnimationFrame(rafRef.current);
+      ro.disconnect();
+      document.removeEventListener('click', retry);
+    };
   }, []);
 
-  // We render an SVG where the text acts as a clip mask over the video.
-  // This gives true "video playing inside text letters" effect.
-  const uid = 'video-text-clip';
   return (
-    <span className="video-mask-text-wrapper" aria-label={text}>
-      <svg
-        className="video-mask-svg"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label={text}
-      >
-        <defs>
-          <clipPath id={uid} clipPathUnits="userSpaceOnUse">
-            <text
-              className="video-mask-svg-text"
-              x="50%"
-              y="80%"
-              textAnchor="middle"
-              dominantBaseline="auto"
-            >
-              {text}
-            </text>
-          </clipPath>
-        </defs>
-        {/* Fallback gradient rect visible while video loads */}
-        <rect
-          width="100%"
-          height="100%"
-          fill="url(#vmtFallback)"
-          clipPath={`url(#${uid})`}
-        />
-        <defs>
-          <linearGradient id="vmtFallback" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#FF5E62" />
-            <stop offset="50%" stopColor="#FF9966" />
-            <stop offset="100%" stopColor="#FFD97D" />
-          </linearGradient>
-        </defs>
-        <foreignObject
-          width="100%"
-          height="100%"
-          clipPath={`url(#${uid})`}
-          style={{ overflow: 'hidden' }}
-        >
-          <div xmlns="http://www.w3.org/1999/xhtml" className="video-mask-fo-host">
-            <video
-              ref={videoRef}
-              src={videoSrc}
-              className="video-mask-player"
-              muted
-              loop
-              playsInline
-              autoPlay
-              preload="auto"
-            />
-          </div>
-        </foreignObject>
-      </svg>
+    <span className="vmt-wrap" aria-label={text}>
+      {/* Canvas behind the text — draws live video frames */}
+      <canvas ref={canvasRef} className="vmt-canvas" aria-hidden="true" />
+      {/* Transparent ghost text — reserves exact layout box, clips canvas */}
+      <span className="vmt-ghost" aria-hidden="true">{text}</span>
+      {/* Hidden video — source pixels for canvas.drawImage() */}
+      <video
+        ref={videoRef}
+        src={videoSrc}
+        className="vmt-hidden-video"
+        muted
+        loop
+        playsInline
+        autoPlay
+        preload="auto"
+      />
     </span>
   );
 }
