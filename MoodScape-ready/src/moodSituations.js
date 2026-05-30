@@ -322,7 +322,7 @@ const toWords = (value) =>
     .filter((word) => word.length > 2 && !STOP_WORDS.has(word));
 
 const hueRanges = {
-  happy: [20, 45],        // Mapped to Sunset Gold and Solar Apricot (doapmine stimulation)
+  happy: [20, 45],        // Mapped to Sunset Gold and Solar Apricot (dopamine stimulation)
   calm: [135, 175],       // Mapped to Tranquil Eucalyptus and Sea Glass Jade (cortisol reduction)
   focused: [205, 235],    // Mapped to Midnight Sapphire and Cyber Cobalt Blue (cognitive stamina)
   stressed: [250, 285],   // Mapped to Cosmic Purple and Dusty Lavender (soothing decompression)

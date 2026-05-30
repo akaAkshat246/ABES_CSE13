@@ -77,7 +77,7 @@ const MOODS = {
     accent: '#00f2fe',
     ink: '#0D1B2A',
     sky: '#E3F2FD',
-    assistant: 'Distractions are low. Start a 25 minute deep work session.',
+    assistant: 'Distractions are low. Start a 25-minute deep work session.',
     activity: 'Deep work',
     environment: 'Minimal orbital station'
   },
@@ -457,20 +457,21 @@ function Hero({ setView }) {
 
 function TypewriterText({ text }) {
   const [displayedText, setDisplayedText] = useState('');
-  
+
   useEffect(() => {
-    let index = 0;
     setDisplayedText('');
     const timer = setInterval(() => {
-      setDisplayedText((prev) => prev + text.charAt(index));
-      index++;
-      if (index >= text.length) {
-        clearInterval(timer);
-      }
+      setDisplayedText((prev) => {
+        if (prev.length >= text.length) {
+          clearInterval(timer);
+          return prev;
+        }
+        return prev + text.charAt(prev.length);
+      });
     }, 15);
     return () => clearInterval(timer);
   }, [text]);
-  
+
   return <span>{displayedText}</span>;
 }
 
@@ -517,7 +518,7 @@ function HappinessSustainer() {
           <span className="panel-label">Emotional Longevity Framework</span>
           <h3>Happiness Maintenance Criteria</h3>
           <p style={{ margin: '4px 0 0', fontSize: '0.86rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-            A thorough scientific baseline evaluating your baseline habits. Toggle your day's criteria to measure your estimated emotional lifespan runway and discover how long you can sustain peak happy hours.
+            A thorough scientific framework evaluating your daily habits. Toggle your day's criteria to measure your estimated emotional lifespan runway and discover how long you can sustain peak happy hours.
           </p>
         </div>
       </div>
@@ -610,11 +611,11 @@ function HappinessSustainer() {
             
             <div style={{ marginTop: '12px', padding: '12px', borderRadius: '8px', background: 'var(--card-hover-bg)', border: '1px solid var(--panel-border)', textAlign: 'left' }}>
               <p style={{ margin: 0, fontSize: '0.84rem', lineHeight: '1.4', color: 'var(--text-app)' }}>
-                {score === 100 && '🥇 Peak Emotional Resilience: You have fortified all four emotional pillars! Your neurochemistry has full reserves to sustain joy, tackle deep focus, and remain unshakeable for the entire 16-hour waking day.'}
+                {score === 100 && '🥇 Peak Emotional Resilience: You have fortified all four emotional pillars! Your neurochemistry has full reserves to sustain joy, tackle deep focus, and remain unshakable for the entire 16-hour waking day.'}
                 {score === 75 && '🥈 Strong Emotional Buffer: Your baseline is excellent. You can sustain up to 13 hours of stability. Cultivating that last micro-habit will anchor your peace all the way to bedtime.'}
                 {score === 50 && '🥉 Moderate Waking Runway: Your emotional energy supports 10 hours of happy focus. Ensure you step away from screens and honor your personal boundaries before mental fatigue sets in.'}
-                {score === 25 && '⚠️ Deficit Alert: With only 7 hours of sustained runway, emotional fatigue is close. We highly recommend starting with restorative rest or a screen detox right away.'}
-                {score === 0 && '🚨 Depleted Runway: You are running on a 4-hour survival baseline. Rest is now a critical biological requirement. Close some tabs and do a complete reset.'}
+                {score === 25 && '⚠️ Deficit Alert: With only 7 hours of sustained runway, emotional fatigue is close. You are strongly advised to start with restorative rest or a screen detox right away.'}
+                {score === 0 && '🚨 Depleted Runway: You are running on a 4-hour survival baseline. Rest is now a critical biological requirement. Close unnecessary tabs and perform a complete mental reset.'}
               </p>
             </div>
           </div>
@@ -630,17 +631,17 @@ function HappinessSustainer() {
               <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Neurological Baseline</strong>
             </div>
             <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-              Sleeping 7-8 hours clears out accumulated neural waste (adenosine), balances cortisol, and resets emotional processing centers to keep you steady.
+              Sleeping 7–8 hours clears accumulated neural waste (adenosine), balances cortisol, and resets emotional processing centers to keep you steady.
             </p>
           </div>
           
           <div style={{ padding: '14px', borderRadius: '8px', background: 'var(--input-bg)', border: '1px solid var(--panel-border)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
               <span>🛡️</span>
-              <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Cognitive Borders</strong>
+              <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Cognitive Boundaries</strong>
             </div>
             <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-              Establishing borders blocks digital notification noise, preventing high stress spikes and safeguarding your finite reservoir of willpower and attention.
+              Establishing boundaries filters out digital notification noise, preventing stress spikes and safeguarding your finite reservoir of willpower and attention.
             </p>
           </div>
           
@@ -650,7 +651,7 @@ function HappinessSustainer() {
               <strong style={{ fontSize: '0.88rem', color: 'var(--text-app)' }}>Sensory Intermissions</strong>
             </div>
             <p style={{ margin: 0, fontSize: '0.78rem', color: 'var(--text-muted)', lineHeight: '1.4' }}>
-              Stepping away from devices for 5 minutes every hour replenishes dopamine receptor sensitivity and activates parasympathetic nervous recovery.
+              Stepping away from devices for 5 minutes every hour restores dopamine receptor sensitivity and activates parasympathetic nervous recovery.
             </p>
           </div>
           
@@ -1331,7 +1332,7 @@ function SpotifyWidget({ mood }) {
               </div>
             ) : (
               <span style={{ color: 'var(--text-muted)', fontSize: '0.84rem' }}>
-                Select a track for your {mood} mindset...
+                Select a track for your {mood.charAt(0).toUpperCase() + mood.slice(1)} mindset...
               </span>
             )}
           </div>
@@ -1442,7 +1443,7 @@ function TaskPlanner() {
     <section className="planning-panel">
       <div className="section-head">
         <div>
-          <span className="panel-label">Reflective planning</span>
+          <span className="panel-label">Reflective Planning</span>
           <h2>Tasks to do</h2>
         </div>
       </div>
@@ -1543,7 +1544,7 @@ function FocusTools() {
           <button className="icon-btn" type="button" title="Reset timer" aria-label="Reset timer" onClick={() => { setRunning(false); setSeconds(25 * 60); }}>
             <RefreshCcw size={18} />
           </button>
-          <button className="icon-btn" type="button" title="Reduce five minutes" aria-label="Reduce five minutes" onClick={() => setSeconds((value) => Math.max(0, value - 5 * 60))}>
+          <button className="icon-btn" type="button" title="Reduce by five minutes" aria-label="Reduce by five minutes" onClick={() => setSeconds((value) => Math.max(0, value - 5 * 60))}>
             <Minus size={18} />
           </button>
           <button className="icon-btn" type="button" title="Add five minutes" aria-label="Add five minutes" onClick={() => setSeconds((value) => value + 5 * 60)}>
@@ -1556,7 +1557,7 @@ function FocusTools() {
         <div className="focus-time-card">
           <span className="panel-label">Focus time</span>
           <strong>{minutes}:{rest}</strong>
-          <p>Use reset to return the hourglass to 25 minutes, or add five minutes when you need a little more space.</p>
+          <p>Use reset to return the hourglass to 25 minutes, or add five minutes when you need a little more time.</p>
         </div>
       </div>
       </section>
@@ -1567,8 +1568,8 @@ function FocusTools() {
         <span className="panel-label" style={{ margin: '0 0 4px 0' }}>Mindful Insights</span>
         <p className="tip-text" style={{ margin: '8px 0 0', lineHeight: '1.5', textAlign: 'center' }}>
           {mood === 'happy' && 'Your momentum is high! Ride this wave to complete creative work, but take a 2-minute breath break between tasks.'}
-          {mood === 'calm' && 'Your emotional state is extremely stable. This is a perfect window for deep planning, technical writing, or reflective analysis.'}
-          {mood === 'focused' && 'Minimize browser tabs and notifications. It takes up to 20 minutes for the human brain to recover deep focus after a small distraction.'}
+          {mood === 'calm' && 'Your emotional state is remarkably stable. This is a perfect window for deep planning, technical writing, or reflective analysis.'}
+          {mood === 'focused' && 'Minimize browser tabs and notifications. It takes up to 20 minutes for the human brain to regain deep focus after a small distraction.'}
           {mood === 'stressed' && 'Mental strain detected. Remember to breathe deeply: inhale for 4s, hold for 4s, exhale for 4s. Take one task at a time.'}
           {mood === 'angry' && 'High emotional intensity is raw potential. Channel this drive into rapid drafting, speed-coding, or clearing out old backlog tasks!'}
         </p>
@@ -1744,7 +1745,7 @@ function Home({ setView, onOpenCinema }) {
     {
       title: 'Scan Your Mood',
       icon: Brain,
-      copy: 'Write down a brief journal sentence or click a mood preset. Our smart engine scans your emotional signals and immediately transforms the entire site colors, soundscapes, and virtual space.',
+      copy: 'Write down a brief journal sentence or click a mood preset. Our smart engine scans your emotional signals and immediately transforms the site\'s colors, soundscapes, and virtual space.',
       bullets: [
         'Advanced tone & sentiment interpretation',
         'Automatic HSL color palette mapping',
@@ -1755,7 +1756,7 @@ function Home({ setView, onOpenCinema }) {
     {
       title: 'Reflective Planning',
       icon: Check,
-      copy: 'Organize your goals, list next actions, and design your day around your exact cognitive capacity. No stressful timers or rigid schedules - pure focus on intentional work.',
+      copy: 'Organize your goals, list next actions, and design your day around your exact cognitive capacity. No stressful timers or rigid schedules — pure focus on intentional work.',
       bullets: [
         'Cognitive capacity task sorting',
         'Mindful lists free of deadline pressure',
@@ -1766,10 +1767,10 @@ function Home({ setView, onOpenCinema }) {
     {
       title: 'Deep Hourglass Focus',
       icon: Hourglass,
-      copy: 'Start the focus timer and watch the sand flow in our custom CSS hourglass animation. Pause, add buffer minutes, or reset the countdown smoothly as your rhythm requires.',
+      copy: 'Start the focus timer and watch the sand flow through our custom CSS hourglass animation. Pause, add buffer minutes, or reset the countdown smoothly as your rhythm requires.',
       bullets: [
-        'Fluid CSS hourglass physical sand flow',
-        'Precise buffer and reset timer keys',
+        'Fluid hourglass sand-flow animation',
+        'Precise buffer and reset timer controls',
         'Ambient Spotify playlist integration',
         'Cognitive focus mindfulness insights'
       ]
@@ -1777,9 +1778,9 @@ function Home({ setView, onOpenCinema }) {
     {
       title: 'Cozy Cinema Escape',
       icon: Film,
-      copy: 'Wind down or find inspiration by exploring over 600+ premium film recommendations, handpicked and updated in real-time to match your current active state perfectly.',
+      copy: 'Wind down or find inspiration by exploring 600+ premium film recommendations, handpicked to perfectly match your current emotional state.',
       bullets: [
-        'Over 600+ hand-sorted movies',
+        '600+ handpicked movies',
         'Direct title search & platform tags',
         'HD review cards & platform badges',
         'A perfect post-work restorative window'
@@ -2235,7 +2236,7 @@ function MoodScanModal({ isOpen, onClose }) {
               <div>
                 <span className="panel-label">Smart Emotional Scanner</span>
                 <h2>Scan your mood</h2>
-                <p className="modal-sub">Tell us how you are feeling, and watch MoodScape dynamically adapt.</p>
+                <p className="modal-sub">Describe how you are feeling, and watch MoodScape dynamically adapt.</p>
               </div>
               <button className="close-btn" onClick={handleClose} aria-label="Close modal">
                 &times;
@@ -2256,7 +2257,7 @@ function MoodScanModal({ isOpen, onClose }) {
                   <textarea
                     value={journal}
                     onChange={(event) => setJournal(event.target.value)}
-                    placeholder="Write down a sentence about your day, pressure, study, or goals..."
+                    placeholder="Write a sentence about your day, current pressure, studies, or goals..."
                     aria-label="Mood journal input"
                     className="scan-textarea"
                     style={{
@@ -2295,7 +2296,7 @@ function MoodScanModal({ isOpen, onClose }) {
                     style={{ marginTop: '20px', minHeight: '46px', border: 0 }}
                   >
                     <Brain size={18} />
-                    Analyze mood & Adapt environment
+                    Analyze Mood & Adapt Environment
                   </button>
                 </>
               )}
@@ -2364,7 +2365,7 @@ function CinemaEscape({ isOpen, onClose, mood }) {
                 <span className="panel-label">Cozy Escape Widget</span>
                 <h2>{MOODS[mood].label} Cinema Escape</h2>
                 <p className="modal-sub">
-                  Discover over 600+ original-postered movies curated strictly for your active **{MOODS[mood].label}** state.
+                  Discover 600+ movies curated strictly for your active <strong>{MOODS[mood].label}</strong> emotional state.
                 </p>
               </div>
               <button className="close-btn" onClick={onClose} aria-label="Close modal">
@@ -2424,7 +2425,7 @@ function CinemaEscape({ isOpen, onClose, mood }) {
                   <div>
                     <span className="movie-genre">{selectedMovie.genre}</span>
                     <h3>{selectedMovie.title}</h3>
-                    <p>{selectedMovie.platform} mood pick with a {selectedMovie.rating} audience score.</p>
+                    <p>{selectedMovie.platform} mood pick with a {selectedMovie.rating} star rating.</p>
                   </div>
                 </aside>
               </section>
@@ -2487,7 +2488,7 @@ function SiteFooter() {
             <span>MoodScape</span>
           </div>
           <p className="footer-tagline">
-            A beautiful responsive emotional workspace aligning focus time, reflective planning, and cozy breaks around your tone.
+            A beautiful, responsive emotional workspace that aligns your focus time, reflective planning, and cozy breaks around your current mood.
           </p>
         </div>
         
