@@ -42,7 +42,7 @@ import {
   YAxis
 } from 'recharts';
 import { scanMoodSituation } from './moodSituations';
-import maskImage from './shimmering_fluid_gradient.png';
+import maskVideoSrc from './my-project.mp4';
 import './styles.css';
 
 const MOODS = {
@@ -355,9 +355,60 @@ function MoodSelector() {
   );
 }
 
-function ImageMaskText({ text, image, font = {} }) {
-  const useImageMask = image && image.src && image.src !== '';
-  const maskUrl = useImageMask ? `url(${image.src})` : 'var(--mood-gradient)';
+function ImageMaskText({ text, videoSrc, font = {} }) {
+  const canvasRef = useRef(null);
+  const videoRef = useRef(null);
+  const rafRef = useRef(null);
+  const [bgDataUrl, setBgDataUrl] = useState(null);
+
+  useEffect(() => {
+    if (!videoSrc) return;
+
+    const video = document.createElement('video');
+    video.src = videoSrc;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    video.crossOrigin = 'anonymous';
+    video.playbackRate = 0.1;
+    videoRef.current = video;
+
+    const canvas = document.createElement('canvas');
+    canvasRef.current = canvas;
+
+    let lastFrameTime = 0;
+    const FRAME_INTERVAL = 1000 / 15; // ~15fps throttle
+
+    const drawFrame = (timestamp) => {
+      if (timestamp - lastFrameTime >= FRAME_INTERVAL) {
+        lastFrameTime = timestamp;
+        if (video.readyState >= 2 && !video.paused && !video.ended) {
+          canvas.width = video.videoWidth || 1280;
+          canvas.height = video.videoHeight || 720;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+          setBgDataUrl(canvas.toDataURL('image/jpeg', 0.85));
+        }
+      }
+      rafRef.current = requestAnimationFrame(drawFrame);
+    };
+
+    video.addEventListener('canplay', () => {
+      video.play().catch(() => {});
+      rafRef.current = requestAnimationFrame(drawFrame);
+    });
+
+    video.load();
+
+    return () => {
+      if (rafRef.current) cancelAnimationFrame(rafRef.current);
+      video.pause();
+      video.src = '';
+      videoRef.current = null;
+    };
+  }, [videoSrc]);
+
+  const maskUrl = bgDataUrl ? `url(${bgDataUrl})` : 'var(--mood-gradient)';
 
   return (
     <span
@@ -390,8 +441,7 @@ function Hero({ setView }) {
         <motion.h1 initial={{ opacity: 0, y: 18 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.08 }}>
           <ImageMaskText 
             text="MoodScape"
-            image={{ src: maskImage }}
-            imageFit="cover"
+            videoSrc={maskVideoSrc}
             font={{
               fontSize: 'inherit',
               fontWeight: 'inherit',
