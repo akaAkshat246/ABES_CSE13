@@ -2251,8 +2251,6 @@ input {
 /* Premium Image Masked Text Styling */
 .aesthetic-mask-text {
   background-image: var(--text-mask-url, var(--mood-gradient));
-  /* 100% 100% stretches the image to fill the full text bounding box,
-     guaranteeing the entire colour range is always visible across the letters */
   background-size: 100% 100%;
   background-position: center;
   background-repeat: no-repeat;
@@ -2260,12 +2258,66 @@ input {
   background-clip: text !important;
   -webkit-text-fill-color: transparent !important;
   color: transparent !important;
-  /* inline-block + vertical-align: top eliminates the descender/baseline gap
-     that appears when an inline-block child lives inside a tight line-height h1 */
   display: inline-block;
   vertical-align: top;
-  /* explicitly clear any inherited text-shadow — shadows still render on
-     transparent glyphs and will muddy the gradient fill if left in place */
   text-shadow: none !important;
   line-height: inherit;
+}
+
+/* ============================================================
+   Video-inside-Text Mask Effect
+   The SVG clipPath technique:  video plays inside the text glyphs
+   ============================================================ */
+.video-mask-text-wrapper {
+  display: inline-block;
+  /* Match the h1 line-height so the element doesn't collapse */
+  vertical-align: top;
+  line-height: 1;
+  /* Give it the same height as the heading font */
+  height: 1.1em;
+}
+
+.video-mask-svg {
+  /* Size the SVG to cover the text.
+     We drive width/height from the parent's font-size via em units. */
+  display: block;
+  width: 7.2em;   /* ~7–8 chars wide at heading size */
+  height: 1.15em;
+  overflow: visible;
+}
+
+/* SVG <text> element used as the clip-path shape */
+.video-mask-svg-text {
+  /* Must match the h1 font stack exactly so the clip shape aligns */
+  font-family: 'Bricolage Grotesque', ui-sans-serif, system-ui, sans-serif;
+  font-size: 1em;        /* inherits the SVG's own em = h1 font-size */
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  fill: black;           /* colour doesn't matter inside <clipPath> */
+}
+
+/* Host div that fills the foreignObject */
+.video-mask-fo-host {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: transparent;
+}
+
+/* The actual video — fill the SVG area and play */
+.video-mask-player {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  /* Remove any browser default controls shadow */
+  outline: none;
+  border: none;
+  background: transparent;
 }

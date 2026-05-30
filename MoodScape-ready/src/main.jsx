@@ -38,6 +38,7 @@ import {
 } from 'recharts';
 import { scanMoodSituation } from './moodSituations';
 import maskImageSrc from './gradient_mask.png';
+import videoSrc from './my-project.mp4';
 import './styles.css';
 
 const MOODS = {
@@ -351,12 +352,85 @@ function MoodSelector() {
 }
 
 function ImageMaskText({ text }) {
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+    video.muted = true;
+    video.loop = true;
+    video.playsInline = true;
+    const playPromise = video.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Autoplay blocked — retry on first user interaction
+        const retry = () => {
+          video.play().catch(() => {});
+          document.removeEventListener('click', retry);
+        };
+        document.addEventListener('click', retry);
+      });
+    }
+  }, []);
+
+  // We render an SVG where the text acts as a clip mask over the video.
+  // This gives true "video playing inside text letters" effect.
+  const uid = 'video-text-clip';
   return (
-    <span
-      className="aesthetic-mask-text"
-      style={{ '--text-mask-url': `url(${maskImageSrc})` }}
-    >
-      {text}
+    <span className="video-mask-text-wrapper" aria-label={text}>
+      <svg
+        className="video-mask-svg"
+        xmlns="http://www.w3.org/2000/svg"
+        role="img"
+        aria-label={text}
+      >
+        <defs>
+          <clipPath id={uid} clipPathUnits="userSpaceOnUse">
+            <text
+              className="video-mask-svg-text"
+              x="50%"
+              y="80%"
+              textAnchor="middle"
+              dominantBaseline="auto"
+            >
+              {text}
+            </text>
+          </clipPath>
+        </defs>
+        {/* Fallback gradient rect visible while video loads */}
+        <rect
+          width="100%"
+          height="100%"
+          fill="url(#vmtFallback)"
+          clipPath={`url(#${uid})`}
+        />
+        <defs>
+          <linearGradient id="vmtFallback" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stopColor="#FF5E62" />
+            <stop offset="50%" stopColor="#FF9966" />
+            <stop offset="100%" stopColor="#FFD97D" />
+          </linearGradient>
+        </defs>
+        <foreignObject
+          width="100%"
+          height="100%"
+          clipPath={`url(#${uid})`}
+          style={{ overflow: 'hidden' }}
+        >
+          <div xmlns="http://www.w3.org/1999/xhtml" className="video-mask-fo-host">
+            <video
+              ref={videoRef}
+              src={videoSrc}
+              className="video-mask-player"
+              muted
+              loop
+              playsInline
+              autoPlay
+              preload="auto"
+            />
+          </div>
+        </foreignObject>
+      </svg>
     </span>
   );
 }
