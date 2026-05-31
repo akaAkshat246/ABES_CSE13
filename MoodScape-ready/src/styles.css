@@ -244,7 +244,7 @@ h3 {
 .hero-text {
   width: min(540px, 100%);
   margin: 0 auto;
-  color: color-mix(in srgb, var(--text-app) 82%, transparent);
+  color: var(--text-muted);
   font-size: 1.12rem;
   line-height: 1.65;
 }
@@ -462,7 +462,7 @@ input {
 
 .assistant p {
   margin: 4px 0 0;
-  color: color-mix(in srgb, var(--text-app) 82%, transparent);
+  color: var(--text-muted);
   line-height: 1.55;
 }
 
@@ -582,7 +582,8 @@ input {
 
 .task.completed .task-text {
   text-decoration: line-through;
-  color: color-mix(in srgb, var(--text-app) 45%, transparent);
+  color: var(--text-muted);
+  opacity: 0.55;
 }
 
 .check-btn {
@@ -618,7 +619,7 @@ input {
   transition: all 0.2s ease;
   background: transparent !important;
   border: 0 !important;
-  color: rgba(255, 255, 255, 0.75);
+  color: var(--text-app);
 }
 
 .delete-btn:hover {
@@ -954,6 +955,13 @@ input {
   overflow-y: auto;
 }
 
+/* Light mode cinema modal overrides */
+:root.light-mode .cinema-modal {
+  border-color: var(--panel-border);
+  background: var(--panel-bg);
+  box-shadow: 0 32px 120px rgba(15, 23, 42, 0.12);
+}
+
 .cinema-modal .modal-head {
   display: flex;
   justify-content: space-between;
@@ -962,6 +970,10 @@ input {
   margin-bottom: 28px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   padding-bottom: 20px;
+}
+
+:root.light-mode .cinema-modal .modal-head {
+  border-bottom-color: var(--panel-border);
 }
 
 .cinema-modal h2 {
@@ -974,10 +986,20 @@ input {
   margin-top: 4px;
 }
 
+:root.light-mode .cinema-modal h2 {
+  background: linear-gradient(135deg, var(--text-app) 30%, color-mix(in srgb, var(--mood-accent) 80%, #000) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .modal-sub {
   color: rgba(255, 255, 255, 0.65);
   font-size: 1.05rem;
   margin: 6px 0 0;
+}
+
+:root.light-mode .modal-sub {
+  color: var(--text-muted);
 }
 
 .cinema-modal .close-btn {
@@ -995,10 +1017,17 @@ input {
   line-height: 0;
 }
 
+:root.light-mode .cinema-modal .close-btn {
+  background: var(--input-bg);
+  border-color: var(--panel-border);
+  color: var(--text-app);
+}
+
 .cinema-modal .close-btn:hover {
   background: #ef4444;
   border-color: #ef4444;
   transform: rotate(90deg);
+  color: #fff;
 }
 
 .web-player-shell {
@@ -1160,16 +1189,29 @@ input {
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+:root.light-mode .web-player-details {
+  background: var(--input-bg);
+  border-color: var(--panel-border);
+}
+
 .web-player-details h3 {
   margin: 6px 0 8px;
   color: #fff;
   line-height: 1.18;
 }
 
+:root.light-mode .web-player-details h3 {
+  color: var(--text-app);
+}
+
 .web-player-details p {
   margin: 0;
   color: rgba(255, 255, 255, 0.66);
   line-height: 1.5;
+}
+
+:root.light-mode .web-player-details p {
+  color: var(--text-muted);
 }
 
 .mini-poster {
@@ -1361,7 +1403,7 @@ input {
 .movie-desc {
   font-size: 0.85rem;
   line-height: 1.45;
-  color: color-mix(in srgb, var(--text-app) 72%, transparent);
+  color: var(--text-muted);
   margin: 0;
 }
 
