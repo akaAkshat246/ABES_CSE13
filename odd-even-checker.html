@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Odd or Even Checker</title>
+    <style>
+        body { display: flex; justify-content: center; align-items: center; min-height: 100vh; font-size: 16px; margin: 0; background-color: #f0f8ff; }
+        .container { text-align: center; border: 1px solid #ddd; padding: 30px; border-radius: 8px; background-color: #fff; }
+        input { width: 100%; padding: 10px; margin-bottom: 15px; font-size: 16px; box-sizing: border-box; }
+        button { width: 100%; background-color: #4CAF50; color: white; padding: 10px 20px; border: none; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #45a049; }
+        .result { margin-top: 10px; padding: 10px; font-weight: bold; display: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Odd or Even Checker</h1>
+        <input type="number" id="numberInput" placeholder="Enter a number">
+        <button onclick="checkOddEven()">Check</button>
+        <div id="result" class="result"></div>
+    </div>
+
+    <script>
+        function checkOddEven() {
+            var num = document.getElementById('numberInput').value;
+            var resultDiv = document.getElementById('result');
+            if (num == '') {
+                alert('Please enter a number!');
+                return;
+            }
+
+            if (num % 2 == 0) {
+                alert(num + ' is EVEN');
+            } else {
+                alert(num + ' is ODD');
+            }
+        }
+    </script>
+</body>
+</html>
